@@ -3,6 +3,7 @@
 ## DDL
 
 ``` SQL
+-- DDL: CREATEM DROP, ALTER, COMMENT, RENAME
 
 CREATE TABLE ers_user_roles(
 	role_id varchar NOT NULL,
@@ -57,7 +58,7 @@ CREATE TABLE ers_reimbursements (
 	submitted timestamp NOT NULL,
 	resolved timestamp,
 	description varchar NOT NULL,
-	receipt bytea,
+	receipt bytea, -- Blob IN er diagram NOT sure what that IS IN postgresql
 	payment_id varchar,
 	author_id varchar NOT NULL,
 	resolver_id varchar,
@@ -71,9 +72,9 @@ CREATE TABLE ers_reimbursements (
 		FOREIGN KEY(author_id)
 			REFERENCES ers_users (user_id) ON UPDATE CASCADE ON DELETE CASCADE,
 			
---	CONSTRAINT fk_resolver_id
---		FOREIGN KEY(resolver_id)
---			REFERENCES ers_users ( NULL ) ON UPDATE CASCADE ON DELETE CASCADE,			
+	CONSTRAINT fk_resolver_id
+		FOREIGN KEY(resolver_id)
+			REFERENCES ers_users (user_id) ON UPDATE CASCADE ON DELETE CASCADE,			
 
 	CONSTRAINT fk_status_id
 		FOREIGN KEY(status_id)
