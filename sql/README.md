@@ -38,6 +38,7 @@ CREATE TABLE ers_users(
 	email varchar NOT NULL UNIQUE,
 	PASSWORD varchar NOT NULL,
 	given_name varchar NOT NULL,
+	surname varchar NOT NULL,
 	is_active boolean,
 	role_id varchar,
 	
