@@ -5,13 +5,8 @@
              http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
-    <!--
-
     <listener>
-        <listener-class>com.revature.yolp.util.ContextLoaderListener</listener-class>
+        <listener-class>com.revature.ers.util.ContextLoaderListener</listener-class>
     </listener>
-    This is a comment
-
-    -->
 
 </web-app>
