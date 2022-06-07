@@ -18,7 +18,7 @@ public class UsersServices {
         this.usersDAO = usersDAO;
     }
 
-    public void register(NewUserRequest request){
+    public Users register(NewUserRequest request){
         Users user = request.extractUser();
         String username = user.getUsername();
         if (isUniqueUsername(username)){
@@ -30,7 +30,7 @@ public class UsersServices {
             } else throw new InvalidRequestException("Invalid username. Username needs to be 8-20 characters long.");
         } else throw new ResourceConflictException("Username is already taken :(");
 
-
+        return user;
     }
 
     private List<String> getAllUserNames(){

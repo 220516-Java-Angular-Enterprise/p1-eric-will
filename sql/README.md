@@ -87,3 +87,12 @@ CREATE TABLE ers_reimbursements (
 			
 );
 ```
+
+## DML
+
+```SQL
+INSERT INTO ers_user_roles  
+VALUES
+    ('DEFAULT', 'DEFAULT');
+
+```
