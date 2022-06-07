@@ -14,11 +14,13 @@ public class UsersDAO implements CrudDAO<Users>{
 
     //get database connection
     Connection con = DatabaseConnection.getCon();
+
+    //note that this DAO does not encrypt/decrypt passwords yet
     @Override
     public void update(Users user) {
         //This method updates *every* field of the database for a user.  Use with care!
         try{
-            PreparedStatement ps = con.prepareStatement("Update ers_users SET username = ?, email = ?, PASSWORD = ?, given_name = ?, surname = ?, is_active = ?, role_id = ? WHERE id = ?");
+            PreparedStatement ps = con.prepareStatement("Update ers_users SET username = ?, email = ?, PASSWORD = ?, given_name = ?, surname = ?, is_active = ?, role_id = ? WHERE user_id = ?");
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPassword());
@@ -36,7 +38,7 @@ public class UsersDAO implements CrudDAO<Users>{
     @Override
     public void delete(String id) {
         try {
-            PreparedStatement ps = con.prepareStatement("DELETE FROM ers_users where id = ?");
+            PreparedStatement ps = con.prepareStatement("DELETE FROM ers_users where user_id = ?");
             ps.setString(1, id);
             ps.executeUpdate();
 
