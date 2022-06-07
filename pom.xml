@@ -70,7 +70,7 @@
                     <configuration>
                         <url>http://localhost:8080/manager/text</url>
                         <server>LocalTomcat</server>
-                        <path>/yolp</path>
+                        <path>/ers</path>
                         <update>true</update>
                     </configuration>
                 </plugin>
