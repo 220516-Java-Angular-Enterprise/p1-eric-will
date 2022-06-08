@@ -26,3 +26,5 @@ hs_err_pid*
 *.iml
 *.DS_Store
 *.properties
+*target/
+*src/resources/db.properties
