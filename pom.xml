@@ -53,6 +53,18 @@
             <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- for ecription -->
+
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.3m</version>
+        </dependency>
+
+        <!-- for ecription -->
+
+
     </dependencies>
 
     <build>

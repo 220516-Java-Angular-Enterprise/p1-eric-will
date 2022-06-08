@@ -16,6 +16,7 @@
 /Users/ericphu/IdeaProjects/p1-eric-will/src/main/java/com/revature/ers/daos/ReimbursementsDAO.java
 /Users/ericphu/IdeaProjects/p1-eric-will/src/main/java/com/revature/ers/daos/UserRolesDAO.java
 /Users/ericphu/IdeaProjects/p1-eric-will/src/main/java/com/revature/ers/util/annotations/Inject.java
+/Users/ericphu/IdeaProjects/p1-eric-will/src/main/java/com/revature/ers/dtos/requests/LoginRequest.java
 /Users/ericphu/IdeaProjects/p1-eric-will/src/main/java/com/revature/ers/models/UserRoles.java
 /Users/ericphu/IdeaProjects/p1-eric-will/src/main/java/com/revature/ers/services/ReimbursementTypesServices.java
 /Users/ericphu/IdeaProjects/p1-eric-will/src/main/java/com/revature/ers/services/ReimbursementsServices.java

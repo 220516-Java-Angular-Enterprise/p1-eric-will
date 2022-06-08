@@ -5,6 +5,7 @@ import com.revature.ers.dtos.requests.NewUserRequest;
 import com.revature.ers.models.Users;
 import com.revature.ers.util.custom_exceptions.InvalidRequestException;
 import com.revature.ers.util.custom_exceptions.ResourceConflictException;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +23,13 @@ public class UsersServices {
         Users user = request.extractUser();
         String username = user.getUsername();
         if (isUniqueUsername(username)){
-            if(isUniqueUsername(username)){
+            if(isValidUsername(username)){
                 if(isValidPassword(user.getPassword())){
                     user.setUser_id(UUID.randomUUID().toString());
+
+                    // ecrypt password
+                     user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
+
                     usersDAO.save(user);
                 } else throw new InvalidRequestException("Invalid password. Minimum eight characters, at least one letter, one number and one special character.");
             } else throw new InvalidRequestException("Invalid username. Username needs to be 8-20 characters long.");
@@ -58,6 +63,10 @@ public class UsersServices {
  //       }
  //       throw new RuntimeException("Incorrect info");
   //  }
+
+    private boolean checkPass(String plainPassword, String hashedPassword) {
+        return BCrypt.checkpw(plainPassword, hashedPassword);
+    }
 
     private boolean isValidInfo(Users user) {
         if(user.getUsername() == null) throw new RuntimeException("Incorrect Username or Password.");
