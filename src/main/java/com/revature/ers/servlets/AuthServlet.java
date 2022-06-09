@@ -3,6 +3,7 @@ package com.revature.ers.servlets;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.ers.dtos.requests.LoginRequest;
 import com.revature.ers.dtos.responses.Principal;
+import com.revature.ers.services.TokenServices;
 import com.revature.ers.services.UsersServices;
 import com.revature.ers.util.annotations.Inject;
 import com.revature.ers.util.custom_exceptions.InvalidAuthenticationException;
@@ -18,10 +19,12 @@ public class AuthServlet extends HttpServlet {
     @Inject
     private final ObjectMapper mapper;
     private final UsersServices userService;
+    private final TokenServices tokenServices;
     @Inject
-    public AuthServlet(ObjectMapper mapper, UsersServices userService){
+    public AuthServlet(ObjectMapper mapper, UsersServices userService,TokenServices tokenServices){
         this.mapper=mapper;
         this.userService=userService;
+        this.tokenServices = tokenServices;
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

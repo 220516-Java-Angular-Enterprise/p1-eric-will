@@ -3,6 +3,7 @@ package com.revature.ers.servlets;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.ers.dtos.requests.NewUserRequest;
 import com.revature.ers.models.Users;
+import com.revature.ers.services.TokenServices;
 import com.revature.ers.services.UsersServices;
 import com.revature.ers.util.annotations.Inject;
 import com.revature.ers.util.custom_exceptions.InvalidRequestException;
@@ -18,11 +19,13 @@ public class UserServlet extends HttpServlet {
     @Inject
     private final ObjectMapper mapper;
     private final UsersServices userService;
+    private final TokenServices tokenServices;
 
     @Inject
-    public UserServlet(ObjectMapper mapper, UsersServices userService) {
+    public UserServlet(ObjectMapper mapper, UsersServices userService, TokenServices tokenServices) {
         this.mapper = mapper;
         this.userService = userService;
+        this.tokenServices = tokenServices;
     }
 
     @Override
