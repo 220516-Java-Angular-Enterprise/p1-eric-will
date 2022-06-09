@@ -38,6 +38,8 @@ public class NewUserRequest {
     }
 
     public Users extractUser(){
-        return new Users(username, password, role);
+        Users newUser=  new Users(username, null, role);
+        newUser.setPassword(this.password);
+        return newUser;
     }
 }
