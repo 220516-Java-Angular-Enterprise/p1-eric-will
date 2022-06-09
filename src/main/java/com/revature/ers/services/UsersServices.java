@@ -56,13 +56,13 @@ public class UsersServices {
     }
 
 
- //   public Users login(String username, String password) {
- //       Users user =  usersDAO.getUserByUsernamePassword(username,password);
- //       if (isValidInfo(user)){
- //           return user;
- //       }
- //       throw new RuntimeException("Incorrect info");
-  //  }
+    public Users login(LoginRI wequest request) {
+        Users user =  usersDAO.getUserByUsernamePassword(username,password);
+        if (isValidInfo(user)){
+            return user;
+        }
+        throw new RuntimeException("Incorrect info");
+    }
 
     private boolean checkPass(String plainPassword, String hashedPassword) {
         return BCrypt.checkpw(plainPassword, hashedPassword);
