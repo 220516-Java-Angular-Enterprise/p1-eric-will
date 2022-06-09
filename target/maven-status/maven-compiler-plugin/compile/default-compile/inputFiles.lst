@@ -2,6 +2,7 @@ C:\Users\willi\Desktop\revature\training_notes\cloned_repository\p1-eric-will\sr
 C:\Users\willi\Desktop\revature\training_notes\cloned_repository\p1-eric-will\src\main\java\com\revature\ers\daos\CrudDAO.java
 C:\Users\willi\Desktop\revature\training_notes\cloned_repository\p1-eric-will\src\main\java\com\revature\ers\daos\ReimbursementTypesDAO.java
 C:\Users\willi\Desktop\revature\training_notes\cloned_repository\p1-eric-will\src\main\java\com\revature\ers\dtos\requests\LoginRequest.java
+C:\Users\willi\Desktop\revature\training_notes\cloned_repository\p1-eric-will\src\main\java\com\revature\ers\util\custom_exceptions\InvalidAuthenticationException.java
 C:\Users\willi\Desktop\revature\training_notes\cloned_repository\p1-eric-will\src\main\java\com\revature\ers\dtos\requests\NewUserRequest.java
 C:\Users\willi\Desktop\revature\training_notes\cloned_repository\p1-eric-will\src\main\java\com\revature\ers\util\annotations\Inject.java
 C:\Users\willi\Desktop\revature\training_notes\cloned_repository\p1-eric-will\src\main\java\com\revature\ers\daos\ReimbursementStatusDAO.java
@@ -12,6 +13,7 @@ C:\Users\willi\Desktop\revature\training_notes\cloned_repository\p1-eric-will\sr
 C:\Users\willi\Desktop\revature\training_notes\cloned_repository\p1-eric-will\src\main\java\com\revature\ers\servlets\AuthServlet.java
 C:\Users\willi\Desktop\revature\training_notes\cloned_repository\p1-eric-will\src\main\java\com\revature\ers\daos\ReimbursementsDAO.java
 C:\Users\willi\Desktop\revature\training_notes\cloned_repository\p1-eric-will\src\main\java\com\revature\ers\servlets\UserServlet.java
+C:\Users\willi\Desktop\revature\training_notes\cloned_repository\p1-eric-will\src\main\java\com\revature\ers\dtos\responses\Principal.java
 C:\Users\willi\Desktop\revature\training_notes\cloned_repository\p1-eric-will\src\main\java\com\revature\ers\util\ContextLoaderListener.java
 C:\Users\willi\Desktop\revature\training_notes\cloned_repository\p1-eric-will\src\main\java\com\revature\ers\models\ReimbursementTypes.java
 C:\Users\willi\Desktop\revature\training_notes\cloned_repository\p1-eric-will\src\main\java\com\revature\ers\services\ReimbursementTypesServices.java

@@ -5,6 +5,7 @@ com\revature\ers\util\ContextLoaderListener.class
 com\revature\ers\daos\UsersDAO.class
 com\revature\ers\models\ReimbursementTypes.class
 com\revature\ers\daos\ReimbursementsDAO.class
+com\revature\ers\dtos\responses\Principal.class
 com\revature\ers\daos\ReimbursementStatusDAO.class
 com\revature\ers\services\ReimbursementTypesServices.class
 com\revature\ers\services\ReimbursementsServices.class
@@ -23,3 +24,4 @@ com\revature\ers\models\ReimbursementStatus.class
 com\revature\ers\services\UsersServices.class
 com\revature\ers\dtos\requests\LoginRequest.class
 com\revature\ers\servlets\AuthServlet.class
+com\revature\ers\util\custom_exceptions\InvalidAuthenticationException.class

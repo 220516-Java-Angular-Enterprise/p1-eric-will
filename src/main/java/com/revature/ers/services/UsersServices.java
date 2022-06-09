@@ -5,6 +5,7 @@ import com.revature.ers.dtos.requests.LoginRequest;
 import com.revature.ers.dtos.requests.NewUserRequest;
 import com.revature.ers.dtos.responses.Principal;
 import com.revature.ers.models.Users;
+import com.revature.ers.util.custom_exceptions.InvalidAuthenticationException;
 import com.revature.ers.util.custom_exceptions.InvalidRequestException;
 import com.revature.ers.util.custom_exceptions.ResourceConflictException;
 import org.mindrot.jbcrypt.BCrypt;
@@ -58,12 +59,11 @@ public class UsersServices {
     }
 
 
-    public Users login(LoginRI wequest request) {
-        Users user =  usersDAO.getUserByUsernamePassword(username,password);
+    public Users login(LoginRequest request) {
+        Users user =  usersDAO.getByUsernameandPassword(request.getUsername(), request.getPassword());
         if (isValidInfo(user)){
             return user;
-        }
-        throw new RuntimeException("Incorrect info");
+        } else throw new InvalidAuthenticationException("Invalid credentials");
     }
 
     private boolean checkPass(String plainPassword, String hashedPassword) {
@@ -71,7 +71,7 @@ public class UsersServices {
     }
 
     private boolean isValidInfo(Users user) {
-        if(user.getUsername() == null) throw new RuntimeException("Incorrect Username or Password.");
+        if(user.getUsername() == null) return false;
         return true;
     }
 
