@@ -1,7 +1,9 @@
 package com.revature.ers.services;
 
 import com.revature.ers.daos.UsersDAO;
+import com.revature.ers.dtos.requests.LoginRequest;
 import com.revature.ers.dtos.requests.NewUserRequest;
+import com.revature.ers.dtos.responses.Principal;
 import com.revature.ers.models.Users;
 import com.revature.ers.util.custom_exceptions.InvalidRequestException;
 import com.revature.ers.util.custom_exceptions.ResourceConflictException;

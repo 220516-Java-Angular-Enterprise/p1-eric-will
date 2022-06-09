@@ -3,6 +3,7 @@ package com.revature.ers.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.ers.daos.UsersDAO;
 import com.revature.ers.services.UsersServices;
+import com.revature.ers.servlets.AuthServlet;
 import com.revature.ers.servlets.UserServlet;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
