@@ -40,7 +40,11 @@ public class Reimbursements {
         this.status_id = status_id;
         this.type_id = type_id;
     }
-
+    public Reimbursements( double amount, String description, String type_id){
+        this.amount=amount;
+        this.description=description;
+        this.type_id=type_id;
+    }
     public String getReimb_id() {
         return reimb_id;
     }
