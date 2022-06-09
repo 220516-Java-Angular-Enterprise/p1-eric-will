@@ -33,6 +33,7 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             NewUserRequest request = mapper.readValue(req.getInputStream(), NewUserRequest.class);
+            System.out.println("here");
             Users createdUser = userService.register(request);
             resp.setStatus(201); // CREATED
             resp.setContentType("application/json");
