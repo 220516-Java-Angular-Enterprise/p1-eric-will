@@ -2,6 +2,7 @@ package com.revature.ers.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.ers.daos.UsersDAO;
+import com.revature.ers.services.TokenServices;
 import com.revature.ers.services.UsersServices;
 import com.revature.ers.servlets.AuthServlet;
 import com.revature.ers.servlets.UserServlet;
@@ -18,8 +19,8 @@ public class ContextLoaderListener implements ServletContextListener {
         /* ObjectMapper provides functionality for reading and writing JSON, either to and from basic POJOs (Plain Old Java Objects) */
         ObjectMapper mapper = new ObjectMapper();
         /* Dependency injection. */
-        UserServlet userServlet = new UserServlet(mapper, new UsersServices(new UsersDAO()));
-        AuthServlet authServlet = new AuthServlet(mapper, new UsersServices(new UsersDAO()));
+        UserServlet userServlet = new UserServlet(mapper, new UsersServices(new UsersDAO()), new TokenServices(new JwtConfig()));
+        AuthServlet authServlet = new AuthServlet(mapper, new UsersServices(new UsersDAO()), new TokenServices(new JwtConfig()));
         /* Need ServletContext class to map whatever servlet to url path. */
         ServletContext context = sce.getServletContext();
         context.addServlet("UserServlet", userServlet).addMapping("/users/*");
