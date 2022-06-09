@@ -3,24 +3,24 @@ package com.revature.ers.dtos.responses;
 import com.revature.ers.models.Users;
 
 public class Principal {
-    private String id;
+    private String user_id;
     private String username;
     private String role;
 
     public Principal (){ super();}
 
     public Principal(Users user) {
-        this.id = user.getUser_id();
+        this.user_id = user.getUser_id();
         this.username = user.getUsername();
         this.role = user.getRole_id();
     }
 
     public String getId() {
-        return id;
+        return user_id;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.user_id = id;
     }
 
     public String getUsername() {
@@ -42,7 +42,7 @@ public class Principal {
     @Override
     public String toString() {
         return "Principal{" +
-                "id=" + id +
+                "user_id=" + user_id +
                 ", username='" + username + '\'' +
                 ", role='" + role + '\'' +
                 '}';

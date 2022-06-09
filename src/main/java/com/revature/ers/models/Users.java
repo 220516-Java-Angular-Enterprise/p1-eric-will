@@ -35,9 +35,9 @@ public class Users {
         this.surname = surname;
     }
 
-    public Users(String username, String id, String role) {
+    public Users(String username, String user_id, String role) {
         this.username = username;
-        this.role_id = id;
+        this.user_id = user_id;
         this.role_id = role;
     }
 
