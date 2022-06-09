@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.*;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
@@ -62,6 +63,19 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
         }
     }
 
+    public void updateResolver(Reimbursements obj) {
+//This method updates *every* field in the database.  Use with care!
+        try{
+            PreparedStatement ps = con.prepareStatement("Update ers_reimbursements SET resolver_id = ? WHERE reimb_id = ?");
+            ps.setString(2, obj.getReimb_id());
+            ps.setString(1, obj.getResolver_id());
+            ps.executeUpdate();
+        } catch (SQLException e){
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     @Override
     public void delete(String id) {
         try {
@@ -102,6 +116,108 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
 
     @Override
     public List<Reimbursements> getAll() {
-        return null;
+        List<Reimbursements> reimbs = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_reimbursements");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                Reimbursements reimb = new Reimbursements(rs.getString("reimb_id"),
+                        rs.getDouble("amount"),
+                        rs.getTimestamp("submitted"),
+                        rs.getTimestamp("resolved"),
+                        rs.getString("description"),
+                        rs.getBlob("receipt"),
+                        rs.getString("payment_id"),
+                        rs.getString("author_id"),
+                        rs.getString("resolver_id"),
+                        rs.getString("status_id"),
+                        rs.getString("type_id"));
+                reimbs.add(reimb);
+            }
+        } catch (SQLException e) {
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+        return reimbs;
+    }
+
+    public Reimbursements getByAuthorId(String id) {
+//this implementation uses the parameterized constructor because the model does not currently have a no-arg constructor.
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_reimbursements WHERE author_id = ?");
+            ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
+            Reimbursements reimb = new Reimbursements(id,
+                    rs.getDouble("amount"),
+                    rs.getTimestamp("submitted"),
+                    rs.getTimestamp("resolved"),
+                    rs.getString("description"),
+                    rs.getBlob("receipt"),
+                    rs.getString("payment_id"),
+                    rs.getString("author_id"),
+                    rs.getString("resolver_id"),
+                    rs.getString("status_id"),
+                    rs.getString("type_id"));
+            return reimb;
+        } catch (SQLException e) {
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public List<Reimbursements> getAllUserIDPending(String user_id) {
+        List<Reimbursements> reimbs = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_reimbursements WHERE author_id = ? AND status_id = 'PENDING'");
+            ps.setString(1, user_id);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                Reimbursements reimb = new Reimbursements(rs.getString("reimb_id"),
+                        rs.getDouble("amount"),
+                        rs.getTimestamp("submitted"),
+                        rs.getTimestamp("resolved"),
+                        rs.getString("description"),
+                        rs.getBlob("receipt"),
+                        rs.getString("payment_id"),
+                        rs.getString("author_id"),
+                        rs.getString("resolver_id"),
+                        rs.getString("status_id"),
+                        rs.getString("type_id"));
+                reimbs.add(reimb);
+            }
+        } catch (SQLException e) {
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+        return reimbs;
+    }
+
+    public List<Reimbursements> getAllPending() {
+        List<Reimbursements> reimbs = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_reimbursements WHERE status_id = 'PENDING'");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                Reimbursements reimb = new Reimbursements(rs.getString("reimb_id"),
+                        rs.getDouble("amount"),
+                        rs.getTimestamp("submitted"),
+                        rs.getTimestamp("resolved"),
+                        rs.getString("description"),
+                        rs.getBlob("receipt"),
+                        rs.getString("payment_id"),
+                        rs.getString("author_id"),
+                        rs.getString("resolver_id"),
+                        rs.getString("status_id"),
+                        rs.getString("type_id"));
+                reimbs.add(reimb);
+            }
+        } catch (SQLException e) {
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+        return reimbs;
     }
 }

@@ -28,6 +28,33 @@ public class UsersDAO implements CrudDAO<Users>{
             ps.setString(5, user.getSurname());
             ps.setBoolean(6, user.isIs_active());
             ps.setString(7, user.getRole_id());
+            ps.setString(8, user.getUser_id());
+            ps.executeUpdate();
+        } catch (SQLException e){
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public void updatePassword(Users user) {
+        //This method updates *every* field of the database for a user.  Use with care!
+        try{
+            PreparedStatement ps = con.prepareStatement("Update ers_users SET PASSWORD = ? WHERE user_id = ?");
+            ps.setString(1, user.getPassword());
+            ps.setString(2, user.getUser_id());
+            ps.executeUpdate();
+        } catch (SQLException e){
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public void updateIsActive(Users user) {
+        //This method updates *every* field of the database for a user.  Use with care!
+        try{
+            PreparedStatement ps = con.prepareStatement("Update ers_users SET is_active = ? WHERE user_id = ?");
+            ps.setBoolean(1, user.isIs_active());
+            ps.setString(2, user.getUser_id());
             ps.executeUpdate();
         } catch (SQLException e){
             //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
@@ -140,6 +167,26 @@ public class UsersDAO implements CrudDAO<Users>{
             //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public Users getByUsernameandPassword(String username, String password) {
+        Users user = null;
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_users WHERE username = ? AND password = ?");
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+
+            if(rs.next()){
+                user = new Users(rs.getString("username"), rs.getString("password"), rs.getString("role_id"));
+            }
+
+        } catch (SQLException e) {
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+        return user;
     }
 
 }
