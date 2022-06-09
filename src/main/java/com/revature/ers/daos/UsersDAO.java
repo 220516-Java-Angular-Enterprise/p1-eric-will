@@ -152,7 +152,7 @@ public class UsersDAO implements CrudDAO<Users>{
     public void save(Users user){
         try{
             //This will not work with the current database schema, because it does not have a surname column (as of 06/05)
-            PreparedStatement ps = con.prepareStatement("INSERT INTO ers_users (user_id, username, email, password, given_name, surname, is_active, role_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement ps = con.prepareStatement("INSERT INTO ers_users (user_id, username, email, password, given_name, surname, is_active, role_id) VALUES (?, ?, ?, crypt(?, gen_salt('bf')), ?, ?, ?, ?)");
             ps.setString(1, user.getUser_id());
             ps.setString(2, user.getUsername());
             ps.setString(3, user.getEmail());
@@ -173,7 +173,7 @@ public class UsersDAO implements CrudDAO<Users>{
         Users user = null;
 
         try {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_users WHERE username = ? AND password = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_users WHERE username = ? AND password = crypt(?, password)");
             ps.setString(1, username);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
