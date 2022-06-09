@@ -31,7 +31,11 @@ public class AuthServlet extends HttpServlet {
         try {
             LoginRequest request = mapper.readValue(req.getInputStream(), LoginRequest.class);
             Principal principal = new Principal(userService.login(request));
-            resp.setStatus(200); //successful login
+
+            // give token to user by puting token  in header
+
+            String token = tokenServices.generateToken(principal);
+            resp.setHeader("Authorization", token);
             resp.setContentType("application/json");
             resp.getWriter().write(mapper.writeValueAsString(principal));
         } catch (InvalidRequestException e) {

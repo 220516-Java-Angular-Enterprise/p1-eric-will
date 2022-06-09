@@ -30,8 +30,6 @@ public class UsersServices {
                 if(isValidPassword(user.getPassword())){
                     user.setUser_id(UUID.randomUUID().toString());
 
-                    // ecrypt password
-                     user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
 
                     usersDAO.save(user);
                 } else throw new InvalidRequestException("Invalid password. Minimum eight characters, at least one letter, one number and one special character.");
@@ -71,7 +69,7 @@ public class UsersServices {
     }
 
     private boolean isValidInfo(Users user) {
-        if(user.getUsername() == null) return false;
+        if(user == null) return false;
         return true;
     }
 

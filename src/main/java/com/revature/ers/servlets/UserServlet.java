@@ -2,6 +2,7 @@ package com.revature.ers.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.ers.dtos.requests.NewUserRequest;
+import com.revature.ers.dtos.responses.Principal;
 import com.revature.ers.models.Users;
 import com.revature.ers.services.TokenServices;
 import com.revature.ers.services.UsersServices;
@@ -48,6 +49,10 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().write("<h1>/test works!</h1>");
+        Principal requester = tokenServices.extractRequestDetails(req.getHeader("Authorization"));
+
+        System.out.println(requester.getRole());
+
+        resp.getWriter().write("<h1>"+ requester.getRole() + "</h1>");
     }
 }
