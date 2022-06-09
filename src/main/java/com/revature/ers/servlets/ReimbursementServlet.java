@@ -2,6 +2,7 @@ package com.revature.ers.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.ers.dtos.requests.NewReimbRequest;
+import com.revature.ers.dtos.responses.Principal;
 import com.revature.ers.models.Reimbursements;
 import com.revature.ers.services.ReimbursementsServices;
 import com.revature.ers.services.TokenServices;
@@ -33,7 +34,16 @@ public class ReimbursementServlet extends HttpServlet {
         try {
             //post request makes a new reimb
             NewReimbRequest request = mapper.readValue(req.getInputStream(), NewReimbRequest.class);
-            Reimbursements createdReimb = reimbService.register(request);
+            Principal requestor = tokenServices.extractRequestDetails(req.getHeader("Authorization"));
+            //admins and finmans can't create reimbursement requests under this system
+            if (requestor == null){
+                resp.setStatus(401); // unauthorized user
+            }
+            if (!requestor.getRole().equals("DEFAULT")){
+                resp.setStatus(403); // V E R B O T E N, only default users create requests.
+                return;
+            }
+            Reimbursements createdReimb = reimbService.register(request, requestor.getId());
             resp.setStatus(201); // CREATED
             resp.setContentType("application/json");
             resp.getWriter().write(mapper.writeValueAsString(createdReimb.getReimb_id()));
@@ -49,7 +59,7 @@ public class ReimbursementServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().write("I am an auth servlet.  Woof.");
+        resp.getWriter().write("I am the reimbursement servlet.  Meow.");
         resp.setStatus(418);
     }
 }

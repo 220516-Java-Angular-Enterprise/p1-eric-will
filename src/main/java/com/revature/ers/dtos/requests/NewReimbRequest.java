@@ -48,7 +48,7 @@ public class NewReimbRequest {
     public Reimbursements extractReimb(){
         Reimbursements reimb = new Reimbursements(this.amount, this.description, this.type_id);
         reimb.setStatus_id("PENDING");
-        return reimb.;
+        return reimb;
     }
 
 }

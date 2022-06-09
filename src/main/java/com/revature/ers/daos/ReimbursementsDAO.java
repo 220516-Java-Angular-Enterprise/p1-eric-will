@@ -20,18 +20,18 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
     public void save(Reimbursements obj) {
         try{
             //For this to work, a new Reimbursements object probably ought to initialize its null-capable columns to null.
-            PreparedStatement ps = con.prepareStatement("INSERT INTO ers_reimbursements (reimb_id, amount, submitted, resolved, description, receipt, payment_id, author_id, resolver_id, status_id, type_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement ps = con.prepareStatement("INSERT INTO ers_reimbursements (reimb_id, amount, submitted, resolved, description, receipt, payment_id, author_id, resolver_id, status_id, type_id) VALUES (?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?)");
             ps.setString(1, obj.getReimb_id());
             ps.setDouble(2, Double.parseDouble(new DecimalFormat("###0.00").format(obj.getAmount())));
             ps.setTimestamp(3, obj.getSubmitted());
             ps.setTimestamp(4,obj.getResolved());
             ps.setString(5, obj.getDescription());
-            ps.setBlob(6, obj.getReceipt());
-            ps.setString(7, obj.getPayment_id());
-            ps.setString(8, obj.getAuthor_id());
-            ps.setString(9, obj.getResolver_id());
-            ps.setString(10, obj.getStatus_id());
-            ps.setString(11, obj.getType_id());
+//            ps.setBlob(6, obj.getReceipt());
+            ps.setString(6, obj.getPayment_id());
+            ps.setString(7, obj.getAuthor_id());
+            ps.setString(8, obj.getResolver_id());
+            ps.setString(9, obj.getStatus_id());
+            ps.setString(10, obj.getType_id());
             ps.executeUpdate();
         } catch (SQLException e){
             //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
