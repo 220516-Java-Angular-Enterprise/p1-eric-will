@@ -114,6 +114,21 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
         }
     }
 
+    public List<String> getAllReimbTypes() {
+        List<String> reimbTypes = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT type_id FROM ers_reimbursement_types");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                reimbTypes.add(rs.getString("type_id"));
+            }
+        } catch (SQLException e) {
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+        return reimbTypes;
+    }
     @Override
     public List<Reimbursements> getAll() {
         List<Reimbursements> reimbs = new ArrayList<>();

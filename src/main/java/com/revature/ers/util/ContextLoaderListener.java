@@ -1,10 +1,13 @@
 package com.revature.ers.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.ers.daos.ReimbursementsDAO;
 import com.revature.ers.daos.UsersDAO;
+import com.revature.ers.services.ReimbursementsServices;
 import com.revature.ers.services.TokenServices;
 import com.revature.ers.services.UsersServices;
 import com.revature.ers.servlets.AuthServlet;
+import com.revature.ers.servlets.ReimbursementServlet;
 import com.revature.ers.servlets.UserServlet;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
@@ -21,10 +24,12 @@ public class ContextLoaderListener implements ServletContextListener {
         /* Dependency injection. */
         UserServlet userServlet = new UserServlet(mapper, new UsersServices(new UsersDAO()), new TokenServices(new JwtConfig()));
         AuthServlet authServlet = new AuthServlet(mapper, new UsersServices(new UsersDAO()), new TokenServices(new JwtConfig()));
+        ReimbursementServlet reimbServlet = new ReimbursementServlet(mapper, new ReimbursementsServices(new ReimbursementsDAO()), new TokenServices(new JwtConfig()));
         /* Need ServletContext class to map whatever servlet to url path. */
         ServletContext context = sce.getServletContext();
         context.addServlet("UserServlet", userServlet).addMapping("/users/*");
         context.addServlet("AuthServlet", authServlet).addMapping("/auth/*");
+        context.addServlet("ReimbServlet", reimbServlet).addMapping("/reimb/*");
     }
 
     @Override
