@@ -15,6 +15,12 @@ public class Principal {
         this.role = user.getRole_id();
     }
 
+    public Principal(String user_id, String username, String role) {
+        this.user_id = user_id;
+        this.username = username;
+        this.role = role;
+    }
+
     public String getId() {
         return user_id;
     }
