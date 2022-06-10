@@ -45,6 +45,21 @@ public class ReimbursementsServices {
         return false;
     }
 
+    public List<Reimbursements> getAll(){
+        return reimbDAO.getAll();
+    }
 
+    public List<Reimbursements> getAllPending(){
+        return reimbDAO.getAllPending();
+    }
 
+    public List<Reimbursements> getAllUserIDPending(String userID){
+        return reimbDAO.getAllUserIDPending(userID);
+    }
+    public List<Reimbursements> getAllUsernamePending(String username){
+        return reimbDAO.getAllUsernamePending(username);
+    }
+    public List<Reimbursements> getAllComplete(){
+        return reimbDAO.getAllComplete();
+    }
 }

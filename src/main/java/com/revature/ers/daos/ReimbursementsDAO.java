@@ -64,7 +64,7 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
     }
 
     public void updateResolver(Reimbursements obj) {
-//This method updates *every* field in the database.  Use with care!
+
         try{
             PreparedStatement ps = con.prepareStatement("Update ers_reimbursements SET resolver_id = ? WHERE reimb_id = ?");
             ps.setString(2, obj.getReimb_id());
@@ -208,12 +208,65 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
         }
         return reimbs;
     }
+    public List<Reimbursements> getAllUsernamePending(String username) {
+        List<Reimbursements> reimbs = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_reimbursements join join ers_users on ers_reimbursements.author_id=ers_users.user_id WHERE username = ? AND status_id = 'PENDING'");
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                Reimbursements reimb = new Reimbursements(rs.getString("reimb_id"),
+                        rs.getDouble("amount"),
+                        rs.getTimestamp("submitted"),
+                        rs.getTimestamp("resolved"),
+                        rs.getString("description"),
+                        rs.getBlob("receipt"),
+                        rs.getString("payment_id"),
+                        rs.getString("author_id"),
+                        rs.getString("resolver_id"),
+                        rs.getString("status_id"),
+                        rs.getString("type_id"));
+                reimbs.add(reimb);
+            }
+        } catch (SQLException e) {
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+        return reimbs;
+    }
 
     public List<Reimbursements> getAllPending() {
         List<Reimbursements> reimbs = new ArrayList<>();
 
         try {
             PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_reimbursements WHERE status_id = 'PENDING'");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                Reimbursements reimb = new Reimbursements(rs.getString("reimb_id"),
+                        rs.getDouble("amount"),
+                        rs.getTimestamp("submitted"),
+                        rs.getTimestamp("resolved"),
+                        rs.getString("description"),
+                        rs.getBlob("receipt"),
+                        rs.getString("payment_id"),
+                        rs.getString("author_id"),
+                        rs.getString("resolver_id"),
+                        rs.getString("status_id"),
+                        rs.getString("type_id"));
+                reimbs.add(reimb);
+            }
+        } catch (SQLException e) {
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+        return reimbs;
+    }
+    public List<Reimbursements> getAllComplete() {
+        List<Reimbursements> reimbs = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_reimbursements WHERE status_id != 'PENDING'");
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 Reimbursements reimb = new Reimbursements(rs.getString("reimb_id"),
