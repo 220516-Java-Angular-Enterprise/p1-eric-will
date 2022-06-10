@@ -50,4 +50,5 @@ public class AuthServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         resp.getWriter().write("I am an auth servlet.  Woof.");
     }
+
 }

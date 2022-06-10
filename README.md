@@ -35,23 +35,22 @@ all employees in the company. Finance managers are authorized to approve and den
 - ~~Project requirements delivered~~
 ### Phase 1
 - ~~Remote repository is created and is being kept up to date~~
-- Core model classes are created
-- Registration/Authentication/User operations in progress
-- Rudimentary logging (to file) in place
+- ~~Core model classes are created~~
+- ~~Registration/Authentication/User operations in progress~~
+- ~~Rudimentary logging (to file) in place~~
 ### Phase 2
-- Local DB instance running
-- App to DB connection made
-- Specified tables created with proper constraints
-- Registration/Authentication/User operations complete
-- Reimbursement operations in progress
-- Basic persistence layer operations in progress
+- ~~Local DB instance running~~
+- ~~App to DB connection made~~
+- ~~Specified tables created with proper constraints~~
+- ~~Registration/Authentication/User operations complete~~
+- ~~Reimbursement operations in progress~~
+- ~~Basic persistence layer operations in progress~~
 - Testing of business logic is in progress
 ### Phase 3
-- Reimbursement operations complete (pending PRISM integration)
-- PRISM integration in progress
+- Reimbursement operations complete
 - Registration/Authentication web endpoints are accessible and functional
 - Reimbursement web endpoints are accessible and functional
-- User passwords are encrypted when persisted to the DB
+- ~~User passwords are encrypted when persisted to the DB~~
 - Testing of business logic is in progress
 ### Final
 - Project Presentations
