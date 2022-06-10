@@ -1,8 +1,7 @@
 package com.revature.ers.services;
 
 import com.revature.ers.daos.UsersDAO;
-import com.revature.ers.dtos.requests.LoginRequest;
-import com.revature.ers.dtos.requests.NewUserRequest;
+import com.revature.ers.dtos.requests.*;
 import com.revature.ers.dtos.responses.Principal;
 import com.revature.ers.models.Users;
 import com.revature.ers.util.custom_exceptions.InvalidAuthenticationException;
@@ -75,5 +74,21 @@ public class UsersServices {
 
     public List<Users> getAllUsers(){
         return usersDAO.getAll();
+    }
+
+    public void approveUser(ApproveNewUser user){
+        usersDAO.updateIsActive(user.extractUser());
+    }
+
+    public void reject(RejectUser request) {
+        usersDAO.reject(request.extractUser());
+    }
+
+    public List<Users> getAllPending(){
+        return usersDAO.getAllPending();
+    }
+
+    public void changePass(ResetUserPass request, String pass) {
+        usersDAO.changePass(request,pass);
     }
 }

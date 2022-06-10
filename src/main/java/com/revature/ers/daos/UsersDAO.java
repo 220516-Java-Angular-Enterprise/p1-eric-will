@@ -1,5 +1,6 @@
 package com.revature.ers.daos;
 
+import com.revature.ers.dtos.requests.ResetUserPass;
 import com.revature.ers.models.Users;
 import com.revature.ers.util.database.DatabaseConnection;
 
@@ -52,11 +53,14 @@ public class UsersDAO implements CrudDAO<Users>{
     public void updateIsActive(Users user) {
         //This method updates *every* field of the database for a user.  Use with care!
         try{
-            PreparedStatement ps = con.prepareStatement("Update ers_users SET is_active = ? WHERE user_id = ?");
+            System.out.println("here in UserDAO is active");
+            System.out.println(user.isIs_active());
+            PreparedStatement ps = con.prepareStatement("Update ers_users SET is_active = ? WHERE username = ?");
             ps.setBoolean(1, user.isIs_active());
-            ps.setString(2, user.getUser_id());
+            ps.setString(2, user.getUsername());
             ps.executeUpdate();
         } catch (SQLException e){
+            System.out.println("Error");
             //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
@@ -189,4 +193,60 @@ public class UsersDAO implements CrudDAO<Users>{
         return user;
     }
 
+    public void reject(Users user) {
+        //This method updates *every* field of the database for a user.  Use with care!
+        try{
+            PreparedStatement ps = con.prepareStatement("Update ers_users SET is_active = ?, role_id = ? WHERE username = ?");
+            ps.setBoolean(1, user.isIs_active());
+            ps.setString(2, user.getRole_id());
+            ps.setString(3, user.getUsername());
+            ps.executeUpdate();
+        } catch (SQLException e){
+            System.out.println("Error");
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public List<Users> getAllPending() {
+        List<Users> users = new ArrayList<>();
+        //This will not work with the current database schema, because it does not have a surname column (as of 06/05)
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_users WHERE is_active  = FALSE  AND role_id  != 'BANNED'");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Users user = new Users();
+                user.setUser_id(rs.getString("user_id"));
+                user.setUsername(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("PASSWORD"));
+                user.setGiven_name(rs.getString("given_name"));
+                user.setSurname(rs.getString("surname"));
+                user.setIs_active(rs.getBoolean("is_active"));
+                user.setRole_id(rs.getString("role_id"));
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return users;
+
+    }
+
+    public void changePass(ResetUserPass request, String pass) {
+        //This method updates *every* field of the database for a user.  Use with care!
+        try{
+            PreparedStatement ps = con.prepareStatement("Update ers_users SET password = ? WHERE username = ?");
+            ps.setString(1, pass);
+            ps.setString(2, request.getUsername());
+            ps.executeUpdate();
+        } catch (SQLException e){
+            System.out.println("Error");
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+
+    }
 }
