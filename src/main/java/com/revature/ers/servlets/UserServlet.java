@@ -39,7 +39,6 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             NewUserRequest request = mapper.readValue(req.getInputStream(), NewUserRequest.class);
-            System.out.println("here");
             Users createdUser = userService.register(request);
             resp.setStatus(201); // CREATED
             resp.setContentType("application/json");
@@ -138,6 +137,24 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Principal requester = tokenServices.extractRequestDetails(req.getHeader("Authorization"));
+
+        // ---------------- Reject no Login -------------------
+        if(requester == null){
+            resp.setContentType("application/html");
+            resp.getWriter().write("<h1>403</h1>");
+            resp.getWriter().write("<h1>Access Denied you are not allowed to see this page</h1>");
+            resp.setStatus(403);
+            return;
+        }
+        // ---------------- Reject not Admin -------------------
+        if(!requester.getRole().equals("ADMIN")) {
+            resp.getWriter().write("<h1>403</h1>");
+            resp.getWriter().write("<h1>Access Denied " + requester.getRole() + " are not allowed to view these pages</h1>");
+            resp.setStatus(403);
+            return;
+        }
 
         String[] uris = req.getRequestURI().split("/");
 

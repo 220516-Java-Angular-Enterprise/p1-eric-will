@@ -6,6 +6,7 @@ import com.revature.ers.dtos.responses.Principal;
 import com.revature.ers.models.Users;
 import com.revature.ers.util.custom_exceptions.InvalidAuthenticationException;
 import com.revature.ers.util.custom_exceptions.InvalidRequestException;
+import com.revature.ers.util.custom_exceptions.NotAuthorizedException;
 import com.revature.ers.util.custom_exceptions.ResourceConflictException;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -58,6 +59,11 @@ public class UsersServices {
 
     public Users login(LoginRequest request) {
         Users user =  usersDAO.getByUsernameandPassword(request.getUsername(), request.getPassword());
+
+        if(user.getRole_id().equals("BANNED")){
+            throw new NotAuthorizedException("Not allowed to login");
+        }
+
         if (isValidInfo(user)){
             return user;
         } else throw new InvalidAuthenticationException("Invalid credentials");

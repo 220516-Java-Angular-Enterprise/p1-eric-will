@@ -8,6 +8,7 @@ import com.revature.ers.services.UsersServices;
 import com.revature.ers.util.annotations.Inject;
 import com.revature.ers.util.custom_exceptions.InvalidAuthenticationException;
 import com.revature.ers.util.custom_exceptions.InvalidRequestException;
+import com.revature.ers.util.custom_exceptions.NotAuthorizedException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,7 +43,12 @@ public class AuthServlet extends HttpServlet {
             resp.setStatus(404);
         } catch (InvalidAuthenticationException e){
             resp.setStatus(401);
-        } catch (Exception e) {
+        }  catch (NotAuthorizedException e){
+            resp.setContentType("application/html");
+            resp.getWriter().write("<h1>403</h1>");
+            resp.getWriter().write("<h1>You are not allowed on this server</h1>");
+            resp.setStatus(403);
+        }  catch (Exception e) {
             e.printStackTrace();
             resp.setStatus(500);
         }
