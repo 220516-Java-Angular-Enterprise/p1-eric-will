@@ -1,12 +1,12 @@
 package com.revature.ers.services;
 
 import com.revature.ers.daos.UsersDAO;
-import com.revature.ers.dtos.requests.LoginRequest;
-import com.revature.ers.dtos.requests.NewUserRequest;
+import com.revature.ers.dtos.requests.*;
 import com.revature.ers.dtos.responses.Principal;
 import com.revature.ers.models.Users;
 import com.revature.ers.util.custom_exceptions.InvalidAuthenticationException;
 import com.revature.ers.util.custom_exceptions.InvalidRequestException;
+import com.revature.ers.util.custom_exceptions.NotAuthorizedException;
 import com.revature.ers.util.custom_exceptions.ResourceConflictException;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -59,6 +59,11 @@ public class UsersServices {
 
     public Users login(LoginRequest request) {
         Users user =  usersDAO.getByUsernameandPassword(request.getUsername(), request.getPassword());
+
+        if(user.getRole_id().equals("BANNED")){
+            throw new NotAuthorizedException("Not allowed to login");
+        }
+
         if (isValidInfo(user)){
             return user;
         } else throw new InvalidAuthenticationException("Invalid credentials");
@@ -75,5 +80,21 @@ public class UsersServices {
 
     public List<Users> getAllUsers(){
         return usersDAO.getAll();
+    }
+
+    public void approveUser(ApproveNewUser user){
+        usersDAO.updateIsActive(user.extractUser());
+    }
+
+    public void reject(RejectUser request) {
+        usersDAO.reject(request.extractUser());
+    }
+
+    public List<Users> getAllPending(){
+        return usersDAO.getAllPending();
+    }
+
+    public void changePass(ResetUserPass request, String pass) {
+        usersDAO.changePass(request,pass);
     }
 }

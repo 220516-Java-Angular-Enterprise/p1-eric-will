@@ -65,6 +65,7 @@ public class ReimbursementServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //get authorization from token
         Principal requester = tokenServices.extractRequestDetails(req.getHeader("Authorization"));
+        List<Reimbursements> pendingReimbs = null;
 
         //only registered users can fetch reimbursements
         if(requester==null){
@@ -84,7 +85,7 @@ public class ReimbursementServlet extends HttpServlet {
                 //switch case: user is a DEFAULT
                 case "DEFAULT":
                     //get all reimbursements that are not pending.  This is handled entirely by the DAO.
-                    List<Reimbursements> pendingReimbs = reimbService.getAllUserIDPending(requester.getId());
+                    pendingReimbs = reimbService.getAllUserIDPending(requester.getId());
                     //for a null query just display list, set status to ok.
                     if (query == null) {
                         resp.setContentType("application/json");
@@ -116,7 +117,7 @@ public class ReimbursementServlet extends HttpServlet {
                 //switch case: user is a FINMAN
                 case "FINMAN":
                     //gets all previously approved/denied requests by this finman
-                    List<Reimbursements> pendingReimbs = reimbService.getAllComplete().stream()
+                    pendingReimbs = reimbService.getAllComplete().stream()
                             .filter(reimb -> reimb.getResolver_id().equals(requester.getId()))
                             .collect(Collectors.toList());
 
