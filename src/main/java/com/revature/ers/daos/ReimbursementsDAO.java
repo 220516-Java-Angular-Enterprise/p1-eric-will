@@ -92,26 +92,29 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
     @Override
     public Reimbursements getById(String id) {
 //this implementation uses the parameterized constructor because the model does not currently have a no-arg constructor.
+        Reimbursements reimb = new Reimbursements();
         try {
             PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_reimbursements WHERE reimb_id = ?");
             ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
-                Reimbursements reimb = new Reimbursements(id,
-                        rs.getDouble("amount"),
-                        rs.getTimestamp("submitted"),
-                        rs.getTimestamp("resolved"),
-                        rs.getString("description"),
-                        rs.getBlob("receipt"),
-                        rs.getString("payment_id"),
-                        rs.getString("author_id"),
-                        rs.getString("resolver_id"),
-                        rs.getString("status_id"),
-                        rs.getString("type_id"));
-                        return reimb;
+            while (rs.next()){
+                reimb.setReimb_id(id);
+                reimb.setAmount(rs.getDouble("amount"));
+                reimb.setSubmitted(rs.getTimestamp("submitted"));
+                reimb.setResolved(rs.getTimestamp("resolved"));
+                reimb.setDescription(rs.getString("description"));
+                reimb.setReceipt(rs.getBlob("receipt"));
+                reimb.setPayment_id(rs.getString("payment_id"));
+                reimb.setAuthor_id(rs.getString("author_id"));
+                reimb.setResolver_id(rs.getString("resolver_id"));
+                reimb.setStatus_id(rs.getString("status_id"));
+                reimb.setType_id(rs.getString("type_id"));
+            }
         } catch (SQLException e) {
             //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
+        return reimb;
     }
 
     public List<String> getAllReimbTypes() {
@@ -157,31 +160,62 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
         return reimbs;
     }
 
-    public Reimbursements getByAuthorId(String id) {
-//this implementation uses the parameterized constructor because the model does not currently have a no-arg constructor.
+    public List<Reimbursements> getByAuthorID(String user_id) {
+        List<Reimbursements> reimbs = new ArrayList<>();
+
         try {
             PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_reimbursements WHERE author_id = ?");
-            ps.setString(1, id);
+            ps.setString(1, user_id);
             ResultSet rs = ps.executeQuery();
-            Reimbursements reimb = new Reimbursements(id,
-                    rs.getDouble("amount"),
-                    rs.getTimestamp("submitted"),
-                    rs.getTimestamp("resolved"),
-                    rs.getString("description"),
-                    rs.getBlob("receipt"),
-                    rs.getString("payment_id"),
-                    rs.getString("author_id"),
-                    rs.getString("resolver_id"),
-                    rs.getString("status_id"),
-                    rs.getString("type_id"));
-            return reimb;
+            while(rs.next()) {
+                Reimbursements reimb = new Reimbursements(rs.getString("reimb_id"),
+                        rs.getDouble("amount"),
+                        rs.getTimestamp("submitted"),
+                        rs.getTimestamp("resolved"),
+                        rs.getString("description"),
+                        rs.getBlob("receipt"),
+                        rs.getString("payment_id"),
+                        rs.getString("author_id"),
+                        rs.getString("resolver_id"),
+                        rs.getString("status_id"),
+                        rs.getString("type_id"));
+                reimbs.add(reimb);
+            }
         } catch (SQLException e) {
             //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
+        return reimbs;
+    }
+    public List<Reimbursements> getByResolverID(String resolver_id) {
+        List<Reimbursements> reimbs = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_reimbursements WHERE resolver_id = ?");
+            ps.setString(1, resolver_id);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                Reimbursements reimb = new Reimbursements(rs.getString("reimb_id"),
+                        rs.getDouble("amount"),
+                        rs.getTimestamp("submitted"),
+                        rs.getTimestamp("resolved"),
+                        rs.getString("description"),
+                        rs.getBlob("receipt"),
+                        rs.getString("payment_id"),
+                        rs.getString("author_id"),
+                        rs.getString("resolver_id"),
+                        rs.getString("status_id"),
+                        rs.getString("type_id"));
+                reimbs.add(reimb);
+            }
+        } catch (SQLException e) {
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+        return reimbs;
     }
 
-    public List<Reimbursements> getAllUserIDPending(String user_id) {
+    public List<Reimbursements> getAllAuthorIDPending(String user_id) {
         List<Reimbursements> reimbs = new ArrayList<>();
 
         try {
@@ -288,4 +322,29 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
         }
         return reimbs;
     }
+    public void resolve(Reimbursements obj) {
+        try{
+            PreparedStatement ps = con.prepareStatement("Update ers_reimbursements SET (status_id, resolved, resolver_id) = (?, ?, ?) WHERE reimb_id = ?");
+            ps.setString(1, obj.getStatus_id());
+            ps.setTimestamp(2,obj.getResolved());
+            ps.setString(3,obj.getResolver_id());
+            ps.setString(4,obj.getReimb_id());
+            ps.executeUpdate();
+        } catch (SQLException e){
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+    public void updateDescr(Reimbursements obj) {
+        try{
+            PreparedStatement ps = con.prepareStatement("Update ers_reimbursements SET description = ? WHERE reimb_id = ?");
+            ps.setString(1, obj.getDescription());
+            ps.setString(2,obj.getReimb_id());
+            ps.executeUpdate();
+        } catch (SQLException e){
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
 }
