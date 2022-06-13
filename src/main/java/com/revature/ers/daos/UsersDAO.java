@@ -37,19 +37,6 @@ public class UsersDAO implements CrudDAO<Users>{
         }
     }
 
-    public void updatePassword(Users user) {
-        //This method updates *every* field of the database for a user.  Use with care!
-        try{
-            PreparedStatement ps = con.prepareStatement("Update ers_users SET PASSWORD = ? WHERE user_id = ?");
-            ps.setString(1, user.getPassword());
-            ps.setString(2, user.getUser_id());
-            ps.executeUpdate();
-        } catch (SQLException e){
-            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
     public void updateIsActive(Users user) {
         //This method updates *every* field of the database for a user.  Use with care!
         try{
@@ -89,29 +76,6 @@ public class UsersDAO implements CrudDAO<Users>{
             while (rs.next()) {
                 user.setUser_id(id);
                 user.setUsername(rs.getString("username"));
-                user.setEmail(rs.getString("email"));
-                user.setPassword(rs.getString("PASSWORD"));
-                user.setGiven_name(rs.getString("given_name"));
-                user.setSurname(rs.getString("surname"));
-                user.setIs_active(rs.getBoolean("is_active"));
-                user.setRole_id(rs.getString("role_id"));
-            }
-        } catch (SQLException e) {
-            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
-            throw new RuntimeException(e.getMessage());
-        }
-        return user;
-    }
-    public Users getByUsername(String username){
-        Users user = new Users();
-
-        try {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_users WHERE username = ?");
-            ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                user.setUser_id(rs.getString("user_id"));
-                user.setUsername(username);
                 user.setEmail(rs.getString("email"));
                 user.setPassword(rs.getString("PASSWORD"));
                 user.setGiven_name(rs.getString("given_name"));
