@@ -56,7 +56,6 @@ public class UsersServices {
         return password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$");
     }
 
-
     public Users login(LoginRequest request) {
         Users user =  usersDAO.getByUsernameandPassword(request.getUsername(), request.getPassword());
 
@@ -67,10 +66,6 @@ public class UsersServices {
         if (isValidInfo(user)){
             return user;
         } else throw new InvalidAuthenticationException("Invalid credentials");
-    }
-
-    private boolean checkPass(String plainPassword, String hashedPassword) {
-        return BCrypt.checkpw(plainPassword, hashedPassword);
     }
 
     private boolean isValidInfo(Users user) {

@@ -196,9 +196,9 @@ public class UserServlet extends HttpServlet {
         if (uris.length >= 4 && uris[3].equals("reset")) {
             String pass = randomPass();
 
-            //ResetUserPass request = mapper.readValue(req.getInputStream(), ResetUserPass.class);
+            ResetUserPass request = mapper.readValue(req.getInputStream(), ResetUserPass.class);
 
-            //userService.changePass(request,pass);
+            userService.changePass(request,pass);
             resp.setContentType("application/html");
             resp.getWriter().write("<h1>Reset Successful!</h1>");
             resp.getWriter().write("<h2> Username new password is:" + pass  + "</h2>");
@@ -208,8 +208,6 @@ public class UserServlet extends HttpServlet {
 
             // -------------
 
-            //ResetUserPass request = mapper.readValue(req.getInputStream(), ResetUserPass.class);
-            //userService.reject(request);
         }
         // ---------------------- Reset users ----------------------------
 
