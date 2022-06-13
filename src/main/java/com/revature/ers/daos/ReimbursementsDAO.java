@@ -63,19 +63,6 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
         }
     }
 
-    public void updateResolver(Reimbursements obj) {
-
-        try{
-            PreparedStatement ps = con.prepareStatement("Update ers_reimbursements SET resolver_id = ? WHERE reimb_id = ?");
-            ps.setString(2, obj.getReimb_id());
-            ps.setString(1, obj.getResolver_id());
-            ps.executeUpdate();
-        } catch (SQLException e){
-            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
     @Override
     public void delete(String id) {
         try {
