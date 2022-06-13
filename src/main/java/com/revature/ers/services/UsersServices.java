@@ -56,21 +56,16 @@ public class UsersServices {
         return password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$");
     }
 
-
     public Users login(LoginRequest request) {
         Users user =  usersDAO.getByUsernameandPassword(request.getUsername(), request.getPassword());
 
-        if(user.getRole_id().equals("BANNED")){
+        if (isValidInfo(user) &&  !user.getRole_id().equals("BANNED")){
+            return user;
+        } else if (user == null){
+            throw new InvalidAuthenticationException("Invalid credentials");
+        }else{
             throw new NotAuthorizedException("Not allowed to login");
         }
-
-        if (isValidInfo(user)){
-            return user;
-        } else throw new InvalidAuthenticationException("Invalid credentials");
-    }
-
-    private boolean checkPass(String plainPassword, String hashedPassword) {
-        return BCrypt.checkpw(plainPassword, hashedPassword);
     }
 
     private boolean isValidInfo(Users user) {
