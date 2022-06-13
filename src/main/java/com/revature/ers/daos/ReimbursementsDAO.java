@@ -157,31 +157,62 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
         return reimbs;
     }
 
-    public Reimbursements getByAuthorId(String id) {
-//this implementation uses the parameterized constructor because the model does not currently have a no-arg constructor.
+    public List<Reimbursements> getByAuthorID(String user_id) {
+        List<Reimbursements> reimbs = new ArrayList<>();
+
         try {
             PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_reimbursements WHERE author_id = ?");
-            ps.setString(1, id);
+            ps.setString(1, user_id);
             ResultSet rs = ps.executeQuery();
-            Reimbursements reimb = new Reimbursements(id,
-                    rs.getDouble("amount"),
-                    rs.getTimestamp("submitted"),
-                    rs.getTimestamp("resolved"),
-                    rs.getString("description"),
-                    rs.getBlob("receipt"),
-                    rs.getString("payment_id"),
-                    rs.getString("author_id"),
-                    rs.getString("resolver_id"),
-                    rs.getString("status_id"),
-                    rs.getString("type_id"));
-            return reimb;
+            while(rs.next()) {
+                Reimbursements reimb = new Reimbursements(rs.getString("reimb_id"),
+                        rs.getDouble("amount"),
+                        rs.getTimestamp("submitted"),
+                        rs.getTimestamp("resolved"),
+                        rs.getString("description"),
+                        rs.getBlob("receipt"),
+                        rs.getString("payment_id"),
+                        rs.getString("author_id"),
+                        rs.getString("resolver_id"),
+                        rs.getString("status_id"),
+                        rs.getString("type_id"));
+                reimbs.add(reimb);
+            }
         } catch (SQLException e) {
             //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
+        return reimbs;
+    }
+    public List<Reimbursements> getByResolverID(String resolver_id) {
+        List<Reimbursements> reimbs = new ArrayList<>();
+
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_reimbursements WHERE resolver_id = ?");
+            ps.setString(1, resolver_id);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                Reimbursements reimb = new Reimbursements(rs.getString("reimb_id"),
+                        rs.getDouble("amount"),
+                        rs.getTimestamp("submitted"),
+                        rs.getTimestamp("resolved"),
+                        rs.getString("description"),
+                        rs.getBlob("receipt"),
+                        rs.getString("payment_id"),
+                        rs.getString("author_id"),
+                        rs.getString("resolver_id"),
+                        rs.getString("status_id"),
+                        rs.getString("type_id"));
+                reimbs.add(reimb);
+            }
+        } catch (SQLException e) {
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+        return reimbs;
     }
 
-    public List<Reimbursements> getAllUserIDPending(String user_id) {
+    public List<Reimbursements> getAllAuthorIDPending(String user_id) {
         List<Reimbursements> reimbs = new ArrayList<>();
 
         try {
@@ -288,4 +319,16 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
         }
         return reimbs;
     }
+    public void resolve(Reimbursements obj) {
+        try{
+            PreparedStatement ps = con.prepareStatement("Update ers_reimbursements SET description = ?, WHERE reimb_id = ?");
+            ps.setString(1, obj.getDescription());
+            ps.setString(2,obj.getReimb_id());
+            ps.executeUpdate();
+        } catch (SQLException e){
+            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
 }
