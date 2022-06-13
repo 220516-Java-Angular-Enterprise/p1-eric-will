@@ -202,7 +202,6 @@ public class UsersDAO implements CrudDAO<Users>{
             ps.setString(3, user.getUsername());
             ps.executeUpdate();
         } catch (SQLException e){
-            System.out.println("Error");
             //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
