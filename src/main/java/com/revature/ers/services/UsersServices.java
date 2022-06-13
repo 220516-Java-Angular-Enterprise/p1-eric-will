@@ -57,7 +57,9 @@ public class UsersServices {
     public Users login(LoginRequest request) {
         Users user =  usersDAO.getByUsernameandPassword(request.getUsername(), request.getPassword());
 
-        if (isValidInfo(user) &&  !user.getRole_id().equals("BANNED")){
+        System.out.println("here");
+
+        if (isValidInfo(user) &&  !user.getRole_id().equals("BANNED") && user.isIs_active()){
             return user;
         } else if (user == null){
             throw new InvalidAuthenticationException("Invalid credentials");
@@ -66,7 +68,7 @@ public class UsersServices {
         }
     }
 
-    private boolean isValidInfo(Users user) {
+    public boolean isValidInfo(Users user) {
         if(user == null) return false;
         return true;
     }
