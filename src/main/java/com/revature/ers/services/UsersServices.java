@@ -29,8 +29,6 @@ public class UsersServices {
             if(isValidUsername(username)){
                 if(isValidPassword(user.getPassword())){
                     user.setUser_id(UUID.randomUUID().toString());
-
-
                     usersDAO.save(user);
                 } else throw new InvalidRequestException("Invalid password. Minimum eight characters, at least one letter, one number and one special character.");
             } else throw new InvalidRequestException("Invalid username. Username needs to be 8-20 characters long.");
@@ -48,11 +46,11 @@ public class UsersServices {
         return !usernames.contains(username);
     }
 
-    public boolean isValidUsername(String username) {
+    private boolean isValidUsername(String username) {
         return username.matches("^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$");
     }
 
-    public boolean isValidPassword(String password) {
+    private boolean isValidPassword(String password) {
         return password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$");
     }
 
