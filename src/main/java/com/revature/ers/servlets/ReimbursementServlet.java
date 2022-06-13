@@ -240,7 +240,7 @@ public class ReimbursementServlet extends HttpServlet {
         try {
             //check authorization
             Principal requestor = tokenServices.extractRequestDetails(req.getHeader("Authorization"));
-            //if empty, needs to be authorized
+            //if empty, needs to be authorized. Abort.
             if (requestor == null){
                 resp.setStatus(401); // unauthorized user
                 return;
@@ -282,7 +282,7 @@ public class ReimbursementServlet extends HttpServlet {
                         resp.getWriter().write(mapper.writeValueAsString(resolvedReimb.getStatus_id()));
                         return;
                     //update a request's description
-                    case "updateDesc":
+                    case "updatedescr":
                         if (!requestor.getRole().equals("DEFAULT")){
                             resp.setStatus(403); //forbidden
                             return;
@@ -296,7 +296,6 @@ public class ReimbursementServlet extends HttpServlet {
                         resp.setContentType("application/json");
                         resp.getWriter().write(mapper.writeValueAsString(descrReimb.getReimb_id()));
                         resp.getWriter().write(mapper.writeValueAsString(descrReimb.getDescription()));
-                        resp.setStatus(403); //Forbidden - user is not the one who issued the reimbursement request
                         return;
                         //default case is not understood
                     default:
@@ -310,9 +309,11 @@ public class ReimbursementServlet extends HttpServlet {
                 return;
             }
         } catch (InvalidRequestException e) {
-            resp.setStatus(404); // BAD REQUEST
+            resp.setStatus(400); // BAD REQUEST
+            resp.getWriter().write(e.getMessage());
         } catch (ForbiddenUserException e) {
             resp.setStatus(403); //FORBIDDEN
+            resp.getWriter().write(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             resp.setStatus(500);

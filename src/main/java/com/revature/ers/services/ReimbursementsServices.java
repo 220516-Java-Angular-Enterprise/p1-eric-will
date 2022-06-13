@@ -95,10 +95,9 @@ public class ReimbursementsServices {
     public Reimbursements updateDescr(UpdateReimbDescr request, String user_id){
         Reimbursements reimb = request.extractReimb();
         Reimbursements targetReimb = reimbDAO.getById(reimb.getReimb_id());
-        if (!targetReimb.getStatus_id().equals("PENDING")) {
-            if (!targetReimb.getAuthor_id().equals(user_id)) {
-                reimb.setResolved(new Timestamp(System.currentTimeMillis()));
-                reimbDAO.resolve(reimb);
+        if (targetReimb.getStatus_id().equals("PENDING")) {
+            if (targetReimb.getAuthor_id().equals(user_id)) {
+                reimbDAO.updateDescr(reimb);
                 return reimb;
             } else throw new ForbiddenUserException("Only the request's author may update its description");
         } else throw new InvalidRequestException("Can only update PENDING requests.");
