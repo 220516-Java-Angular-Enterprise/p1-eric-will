@@ -11,6 +11,7 @@ import com.revature.ers.services.TokenServices;
 import com.revature.ers.services.UsersServices;
 import com.revature.ers.util.annotations.Inject;
 import com.revature.ers.util.custom_exceptions.InvalidRequestException;
+import com.revature.ers.util.custom_exceptions.NotFoundException;
 import com.revature.ers.util.custom_exceptions.ResourceConflictException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -37,39 +38,53 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpStrings httpStrings = new HttpStrings();
+        NewUserRequest request = new NewUserRequest();
+        String[] uris = req.getRequestURI().split("/");
         try {
-            NewUserRequest request = mapper.readValue(req.getInputStream(), NewUserRequest.class);
+            request = mapper.readValue(req.getInputStream(), NewUserRequest.class);
+            if (uris.length == 4 && uris[3].equals("signup")) {request.setRole("DEFAULT");}
+            if (uris.length == 4 && uris[3].equals("manager-sign-up")) {request.setRole("FINMAN");}
+            else{
+                throw new NotFoundException("Not Found");
+            }
             Users createdUser = userService.register(request);
             resp.setStatus(201); // CREATED
             resp.setContentType("application/json");
             resp.getWriter().write(mapper.writeValueAsString(createdUser.getUser_id()));
-        } catch (InvalidRequestException e) {
-            resp.setStatus(404); // BAD REQUEST
+        } catch (NotFoundException e) {
+            resp.getWriter().write(httpStrings.fourOFour(req.getRequestURL().toString()));
+            resp.setStatus(404);
         } catch (ResourceConflictException e) {
+            resp.getWriter().write(httpStrings.httpStr(409, "Rejected",request.getUsername() + "Has already been taken"));
             resp.setStatus(409); // RESOURCE CONFLICT
+        } catch (InvalidRequestException e){
+            resp.getWriter().write(httpStrings.httpStr(500, "Invalid input",e.toString()));
+            resp.setStatus(400);
+
         } catch (Exception e) {
-            e.printStackTrace();
-           resp.setStatus(500);
+            resp.getWriter().write(httpStrings.httpStr(500, "Server side error",e.toString()));
+            resp.setStatus(500);
         }
+
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         Principal requester = tokenServices.extractRequestDetails(req.getHeader("Authorization"));
+        HttpStrings httpStrings = new HttpStrings();
 
         // ---------------- Reject no Login -------------------
         if(requester == null){
             resp.setContentType("application/html");
-            resp.getWriter().write("<h1>403</h1>");
-            resp.getWriter().write("<h1>Access Denied you are not allowed to see this page</h1>");
+            resp.getWriter().write( httpStrings.fourOThree("No Login"));
             resp.setStatus(403);
             return;
         }
         // ---------------- Reject not Admin -------------------
         if(!requester.getRole().equals("ADMIN")) {
-            resp.getWriter().write("<h1>403</h1>");
-            resp.getWriter().write("<h1>Access Denied " + requester.getRole() + " are not allowed to view these pages</h1>");
+            resp.getWriter().write( httpStrings.fourOThree(requester.getRole()));
             resp.setStatus(403);
             return;
         }
@@ -78,13 +93,14 @@ public class UserServlet extends HttpServlet {
         String query =req.getQueryString();
 
 
-        if (uris.length >= 4 && uris[3].contains("search")) {
-            List<Users> users = userService.getAllUsers();
 
+        if (uris.length == 4 && uris[3].contains("search")) {
+            List<Users> users = userService.getAllUsers();
+            System.out.println("here");
 
             if (query != null){
-                // System.out.println(query.charAt(0)); what to search
-                //System.out.println(query.substring(2,query.length()));  searching
+                System.out.println(query.charAt(0));
+                System.out.println(query.substring(2,query.length()));
 
                 //query  username
                 if(query.charAt(0) == 'u'){
@@ -109,14 +125,8 @@ public class UserServlet extends HttpServlet {
                 }
                 else {
                     resp.setContentType("application/html");
-                    resp.getWriter().write("<h1>404 Page not found</h1>");
-                    resp.getWriter().write("<h1>Invalid Query</h1>");
-                    resp.getWriter().write("<h2>Valid Prompts</h1>");
-                    resp.getWriter().write("<ul>" +
-                            "<li> u: for users</li>" +
-                            "<li> r: for role</li>" +
-                            "<li> pending: for pending</li>" +
-                            "</ul>");
+
+                    resp.getWriter().write(httpStrings.fourOFour(req.getRequestURL().toString()+ "?" + req.getQueryString()));
                     resp.setStatus(404);
                     return;
                 }
@@ -129,6 +139,7 @@ public class UserServlet extends HttpServlet {
             //searching all users
             resp.setContentType("application/json");
             resp.getWriter().write(mapper.writeValueAsString(users));
+            resp.setStatus(200);
             // ----------------------------------------
 
         }
@@ -139,19 +150,18 @@ public class UserServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         Principal requester = tokenServices.extractRequestDetails(req.getHeader("Authorization"));
+        HttpStrings httpStrings = new HttpStrings();
 
         // ---------------- Reject no Login -------------------
         if(requester == null){
             resp.setContentType("application/html");
-            resp.getWriter().write("<h1>403</h1>");
-            resp.getWriter().write("<h1>Access Denied you are not allowed to see this page</h1>");
+            resp.getWriter().write( httpStrings.fourOThree(requester.getRole()));
             resp.setStatus(403);
             return;
         }
         // ---------------- Reject not Admin -------------------
         if(!requester.getRole().equals("ADMIN")) {
-            resp.getWriter().write("<h1>403</h1>");
-            resp.getWriter().write("<h1>Access Denied " + requester.getRole() + " are not allowed to view these pages</h1>");
+            resp.getWriter().write( httpStrings.fourOThree(requester.getRole()));
             resp.setStatus(403);
             return;
         }
@@ -169,8 +179,8 @@ public class UserServlet extends HttpServlet {
             userService.approveUser(request);
 
             resp.setContentType("application/html");
-            resp.getWriter().write("<h1>Approval Successful!</h1>");
-            resp.getWriter().write("<h2>" + request.getUsername() + "has been approved! </h2>");
+            resp.getWriter().write(httpStrings.httpStr(202, "User Approval",request.getUsername() + "has been approved!"));
+            System.out.println(request.getUsername() + " has been approved." + System.currentTimeMillis() );
             resp.setStatus(202);
         }
         // ---------------------- Approve users ----------------------------
@@ -186,8 +196,8 @@ public class UserServlet extends HttpServlet {
             userService.reject(request);
 
             resp.setContentType("application/html");
-            resp.getWriter().write("<h1>Reject Successful!</h1>");
-            resp.getWriter().write("<h2>" + request.getUsername() + "has been rejected! </h2>");
+            resp.getWriter().write(httpStrings.httpStr(202, "User Rejection",request.getUsername() + " has been rejected."));
+            System.out.println(request.getUsername() + " has been rejected." + System.currentTimeMillis() );
             resp.setStatus(202);
         }
         // ---------------------- Reject users ----------------------------
@@ -200,8 +210,8 @@ public class UserServlet extends HttpServlet {
 
             userService.changePass(request,pass);
             resp.setContentType("application/html");
-            resp.getWriter().write("<h1>Reset Successful!</h1>");
-            resp.getWriter().write("<h2> Username new password is:" + pass  + "</h2>");
+            resp.getWriter().write(httpStrings.httpStr(202, "Password reset",request.getUsername() + " password has been reset to" + pass));
+            System.out.println(request.getUsername() + " has been reset." + System.currentTimeMillis() );
             resp.setStatus(202);
 
             // get auth---------

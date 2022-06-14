@@ -41,7 +41,7 @@ public class UsersServices {
         return usersDAO.getAll().stream().map(Users::getUsername).collect(Collectors.toList());
     }
 
-    public boolean isUniqueUsername(String username) {
+    private boolean isUniqueUsername(String username) {
         List<String> usernames = getAllUserNames();
         return !usernames.contains(username);
     }
@@ -57,9 +57,7 @@ public class UsersServices {
     public Users login(LoginRequest request) {
         Users user =  usersDAO.getByUsernameandPassword(request.getUsername(), request.getPassword());
 
-        System.out.println("here");
-
-        if (isValidInfo(user) &&  !user.getRole_id().equals("BANNED") && user.isIs_active()){
+        if (isValidInfo(user) &&  !user.getRole_id().equals("BANNED")){
             return user;
         } else if (user == null){
             throw new InvalidAuthenticationException("Invalid credentials");

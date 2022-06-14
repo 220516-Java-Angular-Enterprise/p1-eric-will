@@ -175,7 +175,7 @@ public class UsersDAO implements CrudDAO<Users>{
         List<Users> users = new ArrayList<>();
         //This will not work with the current database schema, because it does not have a surname column (as of 06/05)
         try {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_users WHERE is_active  = FALSE  AND role_id  != 'BANNED'");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_users WHERE is_active = FALSE  AND role_id  != 'BANNED'");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Users user = new Users();
