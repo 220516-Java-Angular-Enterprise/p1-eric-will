@@ -44,8 +44,7 @@ class ReimbursementsServicesTest {
         mockNewReimbRequest.setAmount(1.00);
         mockNewReimbRequest.setDescription("foo");
         mockNewReimbRequest.setType_id("MISC");
-        doNothing().when(mockReimbDAO).save(any())
-        ;
+        doNothing().when(mockReimbDAO).save(any());
         assertEquals(mockNewReimbRequest.getDescription(), mockReimbService.register(mockNewReimbRequest, "bar").getDescription());
 
         //verify that having a nonexistent reimbursement type throws invalidrequestexception
@@ -91,7 +90,7 @@ class ReimbursementsServicesTest {
         mockResolveReimbRequest.setStatus_id("APPROVED");
         //verify that does not work if id does not match a reimb in database
         when(mockReimbDAO.getById(any())).thenReturn(null);
-        assertThrows(NotFoundException.class,()->mockReimbService.resolve(mockResolveReimbRequest));
+        assertThrows(InvalidRequestException.class,()->mockReimbService.resolve(mockResolveReimbRequest));
 
         //verify that does not work if retrieved reimb is not pending
         mockReimb.setStatus_id("DENIED");
@@ -119,7 +118,7 @@ class ReimbursementsServicesTest {
         mockUpdateReimbDescr.setDescription("updated");
         //verify that does not work if returned reimbursement is null, which occurs when the reimb_id isn't in the database
         when(mockReimbDAO.getById(any())).thenReturn(null);
-        assertThrows(NotFoundException.class, ()->mockReimbService.updateDescr(mockUpdateReimbDescr,"foo"));
+        assertThrows(InvalidRequestException.class, ()->mockReimbService.updateDescr(mockUpdateReimbDescr,"foo"));
         //verify that does not work if user has the incorrect userID
         mockReimb.setAuthor_id("bar");
         mockReimb.setStatus_id("PENDING");

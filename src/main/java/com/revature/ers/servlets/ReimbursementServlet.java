@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,22 +46,27 @@ public class ReimbursementServlet extends HttpServlet {
                 throw new NotAuthorizedException("User is not authenticated.");
             }
             if (!requestor.getRole().equals("DEFAULT")) {
-                resp.setStatus(403); // V E R B O T E N, only default users create requests.
                 throw new ForbiddenUserException("Only default users may register reimbursement requests.");
             }
             Reimbursements createdReimb = reimbService.register(request, requestor.getId());
             resp.setStatus(201); // CREATED
+            System.out.println(requestor.getUsername()+"created reimbursement request "+createdReimb.getReimb_id()+" at "+String.valueOf(createdReimb.getSubmitted()));
             resp.setContentType("application/json");
             resp.getWriter().write(mapper.writeValueAsString(createdReimb.getReimb_id()));
         } catch (NotAuthorizedException e){
             resp.setStatus(401);
-            resp.getWriter().write(e.getMessage());
-        } catch (InvalidRequestException e) {
+            resp.getWriter().write(new HttpStrings().httpStr(401,"UNAUTHORIZED",e.getMessage()));
+        } catch (ForbiddenUserException e){
+            resp.setStatus(403); // V E R B O T E N, only default users create requests.
+            resp.getWriter().write(new HttpStrings().httpStr(403,"FORBIDDEN",e.getMessage()));
+        }
+        catch (InvalidRequestException e) {
             resp.setStatus(404); // BAD REQUEST
-            resp.getWriter().write(e.getMessage());
+            resp.getWriter().write(new HttpStrings().httpStr(404,"NOT FOUND",e.getMessage()));
        } catch (Exception e) {
             e.printStackTrace();
-           resp.setStatus(500);
+            resp.setStatus(500);
+            resp.getWriter().write(new HttpStrings().httpStr(500,"INTERNAL SERVER ERROR",e.getMessage()));
         }
     }
 
@@ -218,19 +224,20 @@ public class ReimbursementServlet extends HttpServlet {
 
         } catch (InvalidRequestException e) {
             resp.setStatus(400); // BAD REQUEST
-            resp.getWriter().write(e.getMessage());
+            resp.getWriter().write(new HttpStrings().httpStr(400,"BAD REQUEST",e.getMessage()));
         } catch (NotAuthorizedException e) {
             resp.setStatus(401);// UNAUTHORIZED
-            resp.getWriter().write(e.getMessage());
+            resp.getWriter().write(new HttpStrings().httpStr(401,"UNAUTHORIZED",e.getMessage()));
         } catch (ForbiddenUserException e) {
             resp.setStatus(403); //FORBIDDEN
-            resp.getWriter().write(e.getMessage());
+            resp.getWriter().write(new HttpStrings().httpStr(403,"FORBIDDEN",e.getMessage()));
         } catch (NotFoundException e) {
             resp.setStatus(404); //NOT FOUND
-            resp.getWriter().write(e.getMessage());
+            resp.getWriter().write(new HttpStrings().httpStr(404,"NOT FOUND",e.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
             resp.setStatus(500);
+            resp.getWriter().write(new HttpStrings().httpStr(500,"INTERNAL SERVER ERROR",e.getMessage()));
         }
     }
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -279,6 +286,7 @@ public class ReimbursementServlet extends HttpServlet {
                         //return the reimbursement we made, just in case we want to display anything.
                         Reimbursements resolvedReimb = reimbService.resolve(resRequest);
                         resp.setStatus(200); // SUCCESS
+                        System.out.println(requestor.getUsername()+" resolved reimbursement request "+resRequest.getReimb_id()+" at "+String.valueOf(resolvedReimb.getResolved()));
                         resp.setContentType("application/json");
                         resp.getWriter().write(mapper.writeValueAsString(resolvedReimb.getReimb_id()));
                         resp.getWriter().write(mapper.writeValueAsString(resolvedReimb.getStatus_id()));
@@ -294,6 +302,7 @@ public class ReimbursementServlet extends HttpServlet {
                         //return the reimbursement we made, just in case we want to display anything.
                         Reimbursements descrReimb = reimbService.updateDescr(descrRequest, requestor.getId());
                         resp.setStatus(200); // SUCCESS
+                        System.out.println(requestor.getUsername()+" updated reimbursement request "+descrRequest.getReimb_id()+" to "+descrRequest.getDescription()+" at "+String.valueOf(new Timestamp(System.currentTimeMillis())));
                         resp.setContentType("application/json");
                         resp.getWriter().write(mapper.writeValueAsString(descrReimb.getReimb_id()));
                         resp.getWriter().write(mapper.writeValueAsString(descrReimb.getDescription()));
@@ -308,18 +317,21 @@ public class ReimbursementServlet extends HttpServlet {
             }
         } catch (InvalidRequestException e) {
             resp.setStatus(400); // BAD REQUEST
-            resp.getWriter().write(e.getMessage());
-        } catch (NotAuthorizedException e) {
-            resp.setStatus(401); // UNAUTHORIZED USER
-            resp.getWriter().write(e.getMessage());
-        } catch (ForbiddenUserException e) {
-            resp.setStatus(403); //FORBIDDEN
-            resp.getWriter().write(e.getMessage());
-        } catch (NotFoundException e){
-            resp.setStatus(404); //
+            resp.getWriter().write(new HttpStrings().httpStr(400, "BAD REQUEST", e.getMessage()));
+        } catch (NotAuthorizedException e){
+            resp.setStatus(401);
+            resp.getWriter().write(new HttpStrings().httpStr(401,"UNAUTHORIZED",e.getMessage()));
+        } catch (ForbiddenUserException e){
+            resp.setStatus(403); // V E R B O T E N, only default users create requests.
+            resp.getWriter().write(new HttpStrings().httpStr(403,"FORBIDDEN",e.getMessage()));
+        }
+        catch (NotFoundException e) {
+            resp.setStatus(404); // BAD REQUEST
+            resp.getWriter().write(new HttpStrings().httpStr(404,"NOT FOUND",e.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
             resp.setStatus(500);
+            resp.getWriter().write(new HttpStrings().httpStr(500,"INTERNAL SERVER ERROR",e.getMessage()));
         }
     }
 }

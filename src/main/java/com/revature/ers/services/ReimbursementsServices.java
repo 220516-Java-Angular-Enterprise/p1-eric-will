@@ -52,7 +52,7 @@ public class ReimbursementsServices {
     private boolean isPending(String reimb_id){
         Reimbursements targetReimb = reimbDAO.getById(reimb_id);
         if (targetReimb==null){
-            throw new NotFoundException("Could not find the requested reimbursement in the database.");
+            throw new InvalidRequestException("Could not find the requested reimbursement in the database.");
         }
         if (targetReimb.getStatus_id().equals("PENDING")){
             return true;
@@ -104,7 +104,7 @@ public class ReimbursementsServices {
         Reimbursements reimb = request.extractReimb();
         Reimbursements targetReimb = reimbDAO.getById(reimb.getReimb_id());
         if (targetReimb==null){
-            throw new NotFoundException("Could not find the requested reimbursement in the database.");
+            throw new InvalidRequestException("Could not find the requested reimbursement in the database.");
         }
         if (targetReimb.getStatus_id().equals("PENDING")) {
             if (targetReimb.getAuthor_id().equals(user_id)) {
