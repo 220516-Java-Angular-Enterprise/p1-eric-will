@@ -15,7 +15,6 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
 
 
     Connection con = DatabaseConnection.getCon();
-    //column names: REIMB_ID, AMOUNT, SUBMITTED, RESOLVED, DESCRIPTION, RECEIPT, PAYMENT_ID, AUTHOR_ID, RESOLVER_ID, STATUS_ID, TYPE_ID
     @Override
     public void save(Reimbursements obj) {
         try{
@@ -34,7 +33,6 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
             ps.setString(10, obj.getType_id());
             ps.executeUpdate();
         } catch (SQLException e){
-            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
 
@@ -58,7 +56,6 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
             ps.setString(10, obj.getType_id());
             ps.executeUpdate();
         } catch (SQLException e){
-            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -71,20 +68,20 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
     }
 
     @Override
     public Reimbursements getById(String id) {
-//this implementation uses the parameterized constructor because the model does not currently have a no-arg constructor.
-        Reimbursements reimb = new Reimbursements();
+
+        Reimbursements reimb = null;
         try {
             PreparedStatement ps = con.prepareStatement("SELECT * FROM ers_reimbursements WHERE reimb_id = ?");
             ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
+                reimb = new Reimbursements();
                 reimb.setReimb_id(id);
                 reimb.setAmount(rs.getDouble("amount"));
                 reimb.setSubmitted(rs.getTimestamp("submitted"));
@@ -98,7 +95,6 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
                 reimb.setType_id(rs.getString("type_id"));
             }
         } catch (SQLException e) {
-            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
         return reimb;
@@ -114,7 +110,6 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
                 reimbTypes.add(rs.getString("type_id"));
             }
         } catch (SQLException e) {
-            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
         return reimbTypes;
@@ -141,7 +136,6 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
                 reimbs.add(reimb);
             }
         } catch (SQLException e) {
-            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
         return reimbs;
@@ -169,7 +163,6 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
                 reimbs.add(reimb);
             }
         } catch (SQLException e) {
-            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
         return reimbs;
@@ -196,7 +189,6 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
                 reimbs.add(reimb);
             }
         } catch (SQLException e) {
-            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
         return reimbs;
@@ -224,7 +216,6 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
                 reimbs.add(reimb);
             }
         } catch (SQLException e) {
-            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
         return reimbs;
@@ -251,7 +242,6 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
                 reimbs.add(reimb);
             }
         } catch (SQLException e) {
-            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
         return reimbs;
@@ -278,7 +268,6 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
                 reimbs.add(reimb);
             }
         } catch (SQLException e) {
-            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
         return reimbs;
@@ -304,7 +293,6 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
                 reimbs.add(reimb);
             }
         } catch (SQLException e) {
-            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
         return reimbs;
@@ -318,7 +306,6 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
             ps.setString(4,obj.getReimb_id());
             ps.executeUpdate();
         } catch (SQLException e){
-            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -329,7 +316,6 @@ public class ReimbursementsDAO implements CrudDAO<Reimbursements>{
             ps.setString(2,obj.getReimb_id());
             ps.executeUpdate();
         } catch (SQLException e){
-            //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
     }
