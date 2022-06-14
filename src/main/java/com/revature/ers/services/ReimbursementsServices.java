@@ -10,6 +10,7 @@ import com.revature.ers.models.Reimbursements;
 import com.revature.ers.models.Users;
 import com.revature.ers.util.custom_exceptions.ForbiddenUserException;
 import com.revature.ers.util.custom_exceptions.InvalidRequestException;
+import com.revature.ers.util.custom_exceptions.NotFoundException;
 import com.revature.ers.util.custom_exceptions.ResourceConflictException;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -49,14 +50,15 @@ public class ReimbursementsServices {
     }
 
     private boolean isPending(String reimb_id){
-        if (reimbDAO.getById(reimb_id).getStatus_id().equals("PENDING")){
+        Reimbursements targetReimb = reimbDAO.getById(reimb_id);
+        if (targetReimb==null){
+            throw new NotFoundException("Could not find the requested reimbursement in the database.");
+        }
+        if (targetReimb.getStatus_id().equals("PENDING")){
             return true;
         } else {return false;}
     }
 
-    public List<Reimbursements> getAll(){
-        return reimbDAO.getAll();
-    }
 
     public List<Reimbursements> getAllPending(){
         return reimbDAO.getAllPending();
@@ -68,19 +70,25 @@ public class ReimbursementsServices {
     public List<Reimbursements> getByResolverID(String resolverID){
         return reimbDAO.getByResolverID(resolverID);
     }
-    public Reimbursements getById(String reimb_id){
-        return reimbDAO.getById(reimb_id);
-    }
 
-    public List<Reimbursements> getAllAuthorIDPending(String userID){
-        return reimbDAO.getAllAuthorIDPending(userID);
-    }
-    public List<Reimbursements> getAllUsernamePending(String username){
-        return reimbDAO.getAllUsernamePending(username);
-    }
-    public List<Reimbursements> getAllComplete(){
-        return reimbDAO.getAllComplete();
-    }
+////methods commented out because they aren't used
+//
+//    public List<Reimbursements> getAll(){
+//        return reimbDAO.getAll();
+//    }
+//    public Reimbursements getById(String reimb_id){
+//        return reimbDAO.getById(reimb_id);
+//    }
+//
+//    public List<Reimbursements> getAllAuthorIDPending(String userID){
+//        return reimbDAO.getAllAuthorIDPending(userID);
+//    }
+//    public List<Reimbursements> getAllUsernamePending(String username){
+//        return reimbDAO.getAllUsernamePending(username);
+//    }
+//    public List<Reimbursements> getAllComplete(){
+//        return reimbDAO.getAllComplete();
+//    }
 
     public Reimbursements resolve(ResolveReimbRequest request){
         Reimbursements reimb = request.extractReimb();
@@ -95,6 +103,9 @@ public class ReimbursementsServices {
     public Reimbursements updateDescr(UpdateReimbDescr request, String user_id){
         Reimbursements reimb = request.extractReimb();
         Reimbursements targetReimb = reimbDAO.getById(reimb.getReimb_id());
+        if (targetReimb==null){
+            throw new NotFoundException("Could not find the requested reimbursement in the database.");
+        }
         if (targetReimb.getStatus_id().equals("PENDING")) {
             if (targetReimb.getAuthor_id().equals(user_id)) {
                 reimbDAO.updateDescr(reimb);
