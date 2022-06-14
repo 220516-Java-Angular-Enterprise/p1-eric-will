@@ -20,13 +20,12 @@ public class NewUserRequest {
         this.password = password;
     }
 
-    public NewUserRequest(String username, String password, String email, String given_name, String surname, String role) {
+    public NewUserRequest(String username, String password, String email, String given_name, String surname) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.given_name = given_name;
         this.surname = surname;
-        this.role = role;
     }
 
     public String getUsername() {
