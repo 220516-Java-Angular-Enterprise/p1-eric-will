@@ -49,6 +49,7 @@ public class UserServlet extends HttpServlet {
                 throw new NotFoundException("Not Found");
             }
             Users createdUser = userService.register(request);
+            System.out.println(request.getUsername() + " has signup." + System.currentTimeMillis() );
             resp.setStatus(201); // CREATED
             resp.setContentType("application/json");
             resp.getWriter().write(mapper.writeValueAsString(createdUser.getUser_id()));
