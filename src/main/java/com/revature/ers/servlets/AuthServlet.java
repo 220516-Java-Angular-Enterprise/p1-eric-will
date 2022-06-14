@@ -39,6 +39,8 @@ public class AuthServlet extends HttpServlet {
             resp.setHeader("Authorization", token);
             resp.setContentType("application/json");
             resp.getWriter().write(mapper.writeValueAsString(principal));
+            System.out.println(request.getUsername() + " has logged in." + System.currentTimeMillis() );
+            resp.setStatus(200);
         } catch (InvalidRequestException e) {
             resp.setStatus(404);
         } catch (InvalidAuthenticationException e){

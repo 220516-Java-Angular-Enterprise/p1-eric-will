@@ -66,7 +66,7 @@ public class UsersServices {
         }
     }
 
-    public boolean isValidInfo(Users user) {
+    private boolean isValidInfo(Users user) {
         if(user == null) return false;
         return true;
     }
