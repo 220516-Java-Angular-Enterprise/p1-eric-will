@@ -20,6 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,12 +45,12 @@ public class UserServlet extends HttpServlet {
         try {
             request = mapper.readValue(req.getInputStream(), NewUserRequest.class);
             if (uris.length == 4 && uris[3].equals("signup")) {request.setRole("DEFAULT");}
-            if (uris.length == 4 && uris[3].equals("manager-sign-up")) {request.setRole("FINMAN");}
+            else if (uris.length == 4 && uris[3].equals("manager-sign-up")) {request.setRole("FINMAN");}
             else{
                 throw new NotFoundException("Not Found");
             }
             Users createdUser = userService.register(request);
-            System.out.println(request.getUsername() + " has signup." + System.currentTimeMillis() );
+            System.out.println(request.getUsername() + " has signup." + (new Timestamp(System.currentTimeMillis())) );
             resp.setStatus(201); // CREATED
             resp.setContentType("application/json");
             resp.getWriter().write(mapper.writeValueAsString(createdUser.getUser_id()));
