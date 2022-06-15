@@ -40,7 +40,6 @@ public class UsersDAO implements CrudDAO<Users>{
     public void updateIsActive(Users user) {
         //This method updates *every* field of the database for a user.  Use with care!
         try{
-            System.out.println(user.isIs_active());
             PreparedStatement ps = con.prepareStatement("Update ers_users SET is_active = ? WHERE username = ?");
             ps.setBoolean(1, user.isIs_active());
             ps.setString(2, user.getUsername());
