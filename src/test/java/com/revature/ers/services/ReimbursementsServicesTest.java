@@ -61,35 +61,7 @@ class ReimbursementsServicesTest {
     }
 
     @Test
-    void getAllPending() {
-    //        return reimbDAO.getAllPending();
-
-        //method only calls the DAO method
-
-    }
-
-    @Test
-    void getByAuthorID() {
-        //        return reimbDAO.getByAuthorID(userID);
-
-        //method only calls the DAO method
-
-
-
-    }
-
-    @Test
-    void getByResolverID() {
-        //        return reimbDAO.getByResolverID(resolverID);
-
-        //method only calls the DAO method
-
-
-    }
-
-    @Test
     void resolve() {
-
 
         mockResolveReimbRequest.setResolver_id("tester1");
         mockResolveReimbRequest.setReimb_id("test1");
