@@ -22,6 +22,19 @@ and pending requests. Finance managers can log in and view all reimbursement req
 all employees in the company. Finance managers are authorized to approve and deny requests for expense reimbursement.
 
 
+### Technology
+- Written in Java 8. 
+- Apache Maven
+- Jakarta 
+- JWT 
+- Jackson 
+- Postgres
+- AWS
+- Junit
+- Mockito.
+- Postman
+
+
 ### Roles
 - Admin
 - User
