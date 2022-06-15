@@ -30,6 +30,7 @@ public class AuthServlet extends HttpServlet {
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpStrings httpStrings = new HttpStrings();
         try {
             LoginRequest request = mapper.readValue(req.getInputStream(), LoginRequest.class);
             Principal principal = new Principal(userService.login(request));
@@ -43,13 +44,14 @@ public class AuthServlet extends HttpServlet {
             System.out.println(request.getUsername() + " has logged in." + (new Timestamp(System.currentTimeMillis())) );
             resp.setStatus(200);
         } catch (InvalidRequestException e) {
+            resp.getWriter().write(httpStrings.fourOFour(req.getRequestURL().toString()));
             resp.setStatus(404);
         } catch (InvalidAuthenticationException e){
+            resp.getWriter().write(httpStrings.httpStr(401, "Invalid Authentication", "Invalid Authorization"));
             resp.setStatus(401);
         }  catch (NotAuthorizedException e){
             resp.setContentType("application/html");
-            resp.getWriter().write("<h1>403</h1>");
-            resp.getWriter().write("<h1>You are not allowed on this server</h1>");
+            resp.getWriter().write(httpStrings.httpStr(403, "Not Authorized", "You are not authorize to access this page"));
             resp.setStatus(403);
         }  catch (Exception e) {
             e.printStackTrace();

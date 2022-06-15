@@ -58,10 +58,10 @@ public class UserServlet extends HttpServlet {
             resp.getWriter().write(httpStrings.fourOFour(req.getRequestURL().toString()));
             resp.setStatus(404);
         } catch (ResourceConflictException e) {
-            resp.getWriter().write(httpStrings.httpStr(409, "Rejected",request.getUsername() + "Has already been taken"));
+            resp.getWriter().write(httpStrings.httpStr(409, "Rejected",request.getUsername() + " has already been taken"));
             resp.setStatus(409); // RESOURCE CONFLICT
         } catch (InvalidRequestException e){
-            resp.getWriter().write(httpStrings.httpStr(500, "Invalid input",e.toString()));
+            resp.getWriter().write(httpStrings.httpStr(400, "Invalid input",e.toString()));
             resp.setStatus(400);
 
         } catch (Exception e) {
@@ -178,7 +178,7 @@ public class UserServlet extends HttpServlet {
             userService.approveUser(request);
 
             resp.setContentType("application/html");
-            resp.getWriter().write(httpStrings.httpStr(202, "User Approval",request.getUsername() + "has been approved!"));
+            resp.getWriter().write(httpStrings.httpStr(202, "User Approval",request.getUsername() + " has been approved!"));
             System.out.println(request.getUsername() + " has been approved." + (new Timestamp(System.currentTimeMillis())) );
             resp.setStatus(202);
         }
@@ -195,7 +195,7 @@ public class UserServlet extends HttpServlet {
             userService.reject(request);
 
             resp.setContentType("application/html");
-            resp.getWriter().write(httpStrings.httpStr(202, "User Rejection",request.getUsername() + " has been rejected."));
+            resp.getWriter().write(httpStrings.httpStr(202, "User Rejection ",request.getUsername() + " has been rejected."));
             System.out.println(request.getUsername() + " has been rejected." + (new Timestamp(System.currentTimeMillis())) );
             resp.setStatus(202);
         }
@@ -209,7 +209,7 @@ public class UserServlet extends HttpServlet {
 
             userService.changePass(request,pass);
             resp.setContentType("application/html");
-            resp.getWriter().write(httpStrings.httpStr(202, "Password reset",request.getUsername() + " password has been reset to" + pass));
+            resp.getWriter().write(httpStrings.httpStr(202, "Password reset",request.getUsername() + " password has been reset to: <b>" + pass + "</b>"));
             System.out.println(request.getUsername() + " has been reset." + (new Timestamp(System.currentTimeMillis())) );
             resp.setStatus(202);
 
