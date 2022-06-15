@@ -61,8 +61,8 @@ public class ReimbursementServlet extends HttpServlet {
             resp.getWriter().write(new HttpStrings().httpStr(403,"FORBIDDEN",e.getMessage()));
         }
         catch (InvalidRequestException e) {
-            resp.setStatus(404); // BAD REQUEST
-            resp.getWriter().write(new HttpStrings().httpStr(404,"NOT FOUND",e.getMessage()));
+            resp.setStatus(400); // BAD REQUEST
+            resp.getWriter().write(new HttpStrings().httpStr(400,"BAD REQUEST",e.getMessage()));
        } catch (Exception e) {
             e.printStackTrace();
             resp.setStatus(500);
