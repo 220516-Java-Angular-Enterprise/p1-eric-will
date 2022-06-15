@@ -13,10 +13,10 @@ import com.revature.ers.util.annotations.Inject;
 import com.revature.ers.util.custom_exceptions.InvalidRequestException;
 import com.revature.ers.util.custom_exceptions.NotFoundException;
 import com.revature.ers.util.custom_exceptions.ResourceConflictException;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.IOException;
