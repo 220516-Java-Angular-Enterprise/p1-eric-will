@@ -117,21 +117,21 @@ public class ReimbursementServlet extends HttpServlet {
                                     switch (uris[4]) {
                                         //sort by date submitted.  currently can't choose between ascending or descending.
                                         case "submitted":
-                                            userReimbs = userReimbs.stream().sorted((r1, r2) -> r1.getSubmitted().compareTo(r2.getSubmitted())).collect(Collectors.toList());
+                                            userReimbs = userReimbs.stream().sorted((r1, r2) -> r2.getSubmitted().compareTo(r1.getSubmitted())).collect(Collectors.toList());
                                             resp.setContentType("application/json");
                                             resp.getWriter().write(mapper.writeValueAsString(userReimbs));
                                             resp.setStatus(200);
                                             return;
                                         //sort by date resolved.  currently can't choose between ascending or descending.
                                         case "resolved":
-                                            userReimbs = userReimbs.stream().sorted((r1, r2) -> r1.getResolved().compareTo(r2.getResolved())).collect(Collectors.toList());
+                                            userReimbs = userReimbs.stream().sorted((r1, r2) -> r2.getResolved().compareTo(r1.getResolved())).collect(Collectors.toList());
                                             resp.setContentType("application/json");
                                             resp.getWriter().write(mapper.writeValueAsString(userReimbs));
                                             resp.setStatus(200);
                                             return;
                                         //sort by type
                                         case "type":
-                                            userReimbs = userReimbs.stream().sorted((r1, r2) -> r1.getType_id().compareTo(r2.getType_id())).collect(Collectors.toList());
+                                            userReimbs = userReimbs.stream().sorted((r1, r2) -> r2.getType_id().compareTo(r1.getType_id())).collect(Collectors.toList());
                                             resp.setContentType("application/json");
                                             resp.getWriter().write(mapper.writeValueAsString(userReimbs));
                                             resp.setStatus(200);
@@ -180,20 +180,20 @@ public class ReimbursementServlet extends HttpServlet {
                                     switch (uris[4]) {
                                         //sort by date submitted.  currently can't choose between ascending or descending.
                                         case "submitted":
-                                            userReimbs = userReimbs.stream().sorted((r1, r2) -> r1.getSubmitted().compareTo(r2.getSubmitted())).collect(Collectors.toList());
+                                            userReimbs = userReimbs.stream().sorted((r1, r2) -> r2.getSubmitted().compareTo(r1.getSubmitted())).collect(Collectors.toList());
                                             resp.setContentType("application/json");
                                             resp.getWriter().write(mapper.writeValueAsString(userReimbs));
                                             resp.setStatus(200);
                                             return;
                                         //sort by date resolved.  currently can't choose between ascending or descending.
                                         case "resolved":
-                                            userReimbs = userReimbs.stream().sorted((r1, r2) -> r1.getResolved().compareTo(r2.getResolved())).collect(Collectors.toList());
+                                            userReimbs = userReimbs.stream().sorted((r1, r2) -> r2.getResolved().compareTo(r1.getResolved())).collect(Collectors.toList());
                                             resp.setContentType("application/json");
                                             resp.getWriter().write(mapper.writeValueAsString(userReimbs));
                                             resp.setStatus(200);
                                             //sort by type
                                         case "type":
-                                            userReimbs = userReimbs.stream().sorted((r1, r2) -> r1.getType_id().compareTo(r2.getType_id())).collect(Collectors.toList());
+                                            userReimbs = userReimbs.stream().sorted((r1, r2) -> r2.getType_id().compareTo(r1.getType_id())).collect(Collectors.toList());
                                             resp.setContentType("application/json");
                                             resp.getWriter().write(mapper.writeValueAsString(userReimbs));
                                             resp.setStatus(200);
@@ -208,7 +208,7 @@ public class ReimbursementServlet extends HttpServlet {
                                     return;
                                 }
                             case "submitted":
-                                userReimbs = userReimbs.stream().sorted((r1, r2) -> r1.getSubmitted().compareTo(r2.getSubmitted())).collect(Collectors.toList());
+                                userReimbs = userReimbs.stream().sorted((r1, r2) -> r2.getSubmitted().compareTo(r1.getSubmitted())).collect(Collectors.toList());
                                 resp.setContentType("application/json");
                                 resp.getWriter().write(mapper.writeValueAsString(userReimbs));
                                 return;
@@ -302,7 +302,7 @@ public class ReimbursementServlet extends HttpServlet {
                         //return the reimbursement we made, just in case we want to display anything.
                         Reimbursements descrReimb = reimbService.updateDescr(descrRequest, requestor.getId());
                         resp.setStatus(200); // SUCCESS
-                        System.out.println(requestor.getUsername()+" updated reimbursement request "+descrRequest.getReimb_id()+" to "+descrRequest.getDescription()+" at "+String.valueOf(new Timestamp(System.currentTimeMillis())));
+                        System.out.println(requestor.getUsername()+" updated reimbursement request "+descrRequest.getReimb_id()+" to \""+descrRequest.getDescription()+"\" at "+String.valueOf(new Timestamp(System.currentTimeMillis())));
                         resp.setContentType("application/json");
                         resp.getWriter().write(mapper.writeValueAsString(descrReimb.getReimb_id()));
                         resp.getWriter().write(mapper.writeValueAsString(descrReimb.getDescription()));
