@@ -50,7 +50,13 @@ class ReimbursementsServicesTest {
         //verify that having a nonexistent reimbursement type throws invalidrequestexception
         mockNewReimbRequest.setType_id("wrong");
         assertThrows(InvalidRequestException.class, () -> mockReimbService.register(mockNewReimbRequest,"bar"));
+        mockNewReimbRequest.setType_id("MISC");
 
+        //verify that a negative Amount or 0 throws an exception
+        mockNewReimbRequest.setAmount(0.00);
+        assertThrows(InvalidRequestException.class, () -> mockReimbService.register(mockNewReimbRequest,"bar"));
+        mockNewReimbRequest.setAmount(-1.00);
+        assertThrows(InvalidRequestException.class, () -> mockReimbService.register(mockNewReimbRequest,"bar"));
 
     }
 
