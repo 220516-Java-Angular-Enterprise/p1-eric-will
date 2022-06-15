@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 
 public class AuthServlet extends HttpServlet {
     @Inject
@@ -39,7 +40,7 @@ public class AuthServlet extends HttpServlet {
             resp.setHeader("Authorization", token);
             resp.setContentType("application/json");
             resp.getWriter().write(mapper.writeValueAsString(principal));
-            System.out.println(request.getUsername() + " has logged in." + System.currentTimeMillis() );
+            System.out.println(request.getUsername() + " has logged in." + (new Timestamp(System.currentTimeMillis())) );
             resp.setStatus(200);
         } catch (InvalidRequestException e) {
             resp.setStatus(404);
