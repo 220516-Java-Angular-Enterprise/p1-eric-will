@@ -40,14 +40,11 @@ public class UsersDAO implements CrudDAO<Users>{
     public void updateIsActive(Users user) {
         //This method updates *every* field of the database for a user.  Use with care!
         try{
-            System.out.println("here in UserDAO is active");
-            System.out.println(user.isIs_active());
             PreparedStatement ps = con.prepareStatement("Update ers_users SET is_active = ? WHERE username = ?");
             ps.setBoolean(1, user.isIs_active());
             ps.setString(2, user.getUsername());
             ps.executeUpdate();
         } catch (SQLException e){
-            System.out.println("Error");
             //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }
@@ -201,12 +198,11 @@ public class UsersDAO implements CrudDAO<Users>{
     public void changePass(ResetUserPass request, String pass) {
         //This method updates *every* field of the database for a user.  Use with care!
         try{
-            PreparedStatement ps = con.prepareStatement("Update ers_users SET password = ? WHERE username = ?");
+            PreparedStatement ps = con.prepareStatement("Update ers_users SET password = crypt(?, gen_salt('bf')) WHERE username = ?");
             ps.setString(1, pass);
             ps.setString(2, request.getUsername());
             ps.executeUpdate();
         } catch (SQLException e){
-            System.out.println("Error");
             //Need to create a custom sql exception throw to UserService. UserService should handle error logging.
             throw new RuntimeException(e.getMessage());
         }

@@ -20,6 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,12 +45,12 @@ public class UserServlet extends HttpServlet {
         try {
             request = mapper.readValue(req.getInputStream(), NewUserRequest.class);
             if (uris.length == 4 && uris[3].equals("signup")) {request.setRole("DEFAULT");}
-            if (uris.length == 4 && uris[3].equals("manager-sign-up")) {request.setRole("FINMAN");}
+            else if (uris.length == 4 && uris[3].equals("manager-sign-up")) {request.setRole("FINMAN");}
             else{
                 throw new NotFoundException("Not Found");
             }
             Users createdUser = userService.register(request);
-            System.out.println(request.getUsername() + " has signup." + System.currentTimeMillis() );
+            System.out.println(request.getUsername() + " has signup." + (new Timestamp(System.currentTimeMillis())) );
             resp.setStatus(201); // CREATED
             resp.setContentType("application/json");
             resp.getWriter().write(mapper.writeValueAsString(createdUser.getUser_id()));
@@ -97,11 +98,8 @@ public class UserServlet extends HttpServlet {
 
         if (uris.length == 4 && uris[3].contains("search")) {
             List<Users> users = userService.getAllUsers();
-            System.out.println("here");
 
             if (query != null){
-                System.out.println(query.charAt(0));
-                System.out.println(query.substring(2,query.length()));
 
                 //query  username
                 if(query.charAt(0) == 'u'){
@@ -156,7 +154,7 @@ public class UserServlet extends HttpServlet {
         // ---------------- Reject no Login -------------------
         if(requester == null){
             resp.setContentType("application/html");
-            resp.getWriter().write( httpStrings.fourOThree(requester.getRole()));
+            resp.getWriter().write( httpStrings.fourOThree("No login"));
             resp.setStatus(403);
             return;
         }
@@ -181,7 +179,7 @@ public class UserServlet extends HttpServlet {
 
             resp.setContentType("application/html");
             resp.getWriter().write(httpStrings.httpStr(202, "User Approval",request.getUsername() + "has been approved!"));
-            System.out.println(request.getUsername() + " has been approved." + System.currentTimeMillis() );
+            System.out.println(request.getUsername() + " has been approved." + (new Timestamp(System.currentTimeMillis())) );
             resp.setStatus(202);
         }
         // ---------------------- Approve users ----------------------------
@@ -198,7 +196,7 @@ public class UserServlet extends HttpServlet {
 
             resp.setContentType("application/html");
             resp.getWriter().write(httpStrings.httpStr(202, "User Rejection",request.getUsername() + " has been rejected."));
-            System.out.println(request.getUsername() + " has been rejected." + System.currentTimeMillis() );
+            System.out.println(request.getUsername() + " has been rejected." + (new Timestamp(System.currentTimeMillis())) );
             resp.setStatus(202);
         }
         // ---------------------- Reject users ----------------------------
@@ -212,7 +210,7 @@ public class UserServlet extends HttpServlet {
             userService.changePass(request,pass);
             resp.setContentType("application/html");
             resp.getWriter().write(httpStrings.httpStr(202, "Password reset",request.getUsername() + " password has been reset to" + pass));
-            System.out.println(request.getUsername() + " has been reset." + System.currentTimeMillis() );
+            System.out.println(request.getUsername() + " has been reset." + (new Timestamp(System.currentTimeMillis())) );
             resp.setStatus(202);
 
             // get auth---------
