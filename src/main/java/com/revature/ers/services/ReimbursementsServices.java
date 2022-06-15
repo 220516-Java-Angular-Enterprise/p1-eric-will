@@ -31,6 +31,9 @@ public class ReimbursementsServices {
     public Reimbursements register(NewReimbRequest request, String author_id) {
         Reimbursements reimb = request.extractReimb();
         reimb.setAuthor_id(author_id);
+        if (reimb.getAmount()<=0){
+            throw new InvalidRequestException("Reimbursement can't be a negative amount.");
+        }
         if (isValidReimbType(request.getType_id())) {
             reimb.setReimb_id(UUID.randomUUID().toString());
             reimb.setSubmitted(new Timestamp(System.currentTimeMillis()));
