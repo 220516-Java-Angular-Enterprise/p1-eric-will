@@ -61,8 +61,8 @@ public class ReimbursementServlet extends HttpServlet {
             resp.getWriter().write(new HttpStrings().httpStr(403,"FORBIDDEN",e.getMessage()));
         }
         catch (InvalidRequestException e) {
-            resp.setStatus(404); // BAD REQUEST
-            resp.getWriter().write(new HttpStrings().httpStr(404,"NOT FOUND",e.getMessage()));
+            resp.setStatus(400); // BAD REQUEST
+            resp.getWriter().write(new HttpStrings().httpStr(400,"BAD REQUEST",e.getMessage()));
        } catch (Exception e) {
             e.printStackTrace();
             resp.setStatus(500);
@@ -172,9 +172,10 @@ public class ReimbursementServlet extends HttpServlet {
                         return;
                     } else {
                         //otherwise, get all past reimbursement requests with this user as the resolver
-                        userReimbs = reimbService.getByResolverID(requester.getId());
+
                         switch (uris[3]) {
                             case "history":
+                                userReimbs = reimbService.getByResolverID(requester.getId());
                                 //supports sorting by type or date with additional uri
                                 if (uris.length > 4) {
                                     switch (uris[4]) {
@@ -208,7 +209,7 @@ public class ReimbursementServlet extends HttpServlet {
                                     return;
                                 }
                             case "submitted":
-                                userReimbs = userReimbs.stream().sorted((r1, r2) -> r2.getSubmitted().compareTo(r1.getSubmitted())).collect(Collectors.toList());
+                                userReimbs = reimbService.getAllPending().stream().sorted((r1, r2) -> r2.getSubmitted().compareTo(r1.getSubmitted())).collect(Collectors.toList());
                                 resp.setContentType("application/json");
                                 resp.getWriter().write(mapper.writeValueAsString(userReimbs));
                                 return;
