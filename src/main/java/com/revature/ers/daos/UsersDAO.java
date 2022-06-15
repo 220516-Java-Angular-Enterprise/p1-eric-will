@@ -144,7 +144,7 @@ public class UsersDAO implements CrudDAO<Users>{
             ResultSet rs = ps.executeQuery();
 
             if(rs.next()){
-                user = new Users(rs.getString("username"), rs.getString("user_id"), rs.getString("role_id"));
+                user = new Users(rs.getString("user_id"), rs.getString("username"), rs.getString("email"), rs.getString("password"), rs.getString("given_name"), rs.getString("surname"),rs.getBoolean("is_active"), rs.getString("role_id"));
             }
 
         } catch (SQLException e) {

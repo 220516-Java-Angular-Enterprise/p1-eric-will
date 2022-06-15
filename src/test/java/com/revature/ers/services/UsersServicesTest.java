@@ -138,24 +138,6 @@ class UsersServicesTest {
     }
 
     @Test
-    void approveUser() {
-        // Test when only called once
-        doNothing().when(mockDAO).updateIsActive(any());
-        usersServices.approveUser(fakeApproved);
-        verify(mockDAO, times(1)).updateIsActive(any());
-        //-----------------------------------
-    }
-
-    @Test
-    void reject() {
-        // Test when only called once
-        doNothing().when(mockDAO).reject(any());
-        usersServices.reject(fakeReject);
-        verify(mockDAO, times(1)).reject(any());
-        //-----------------------------------
-    }
-
-    @Test
     void getAllPending() {
 
         // Test when only called once
@@ -176,6 +158,26 @@ class UsersServicesTest {
         assertEquals(5,usersServices.getAllPending().size());
         assertEquals(5, (int) usersServices.getAllPending().stream().filter(user -> !user.isIs_active()).count());
     }
+
+    @Test
+    void approveUser() {
+        // Test when only called once
+        doNothing().when(mockDAO).updateIsActive(any());
+        usersServices.approveUser(fakeApproved);
+        verify(mockDAO, times(1)).updateIsActive(any());
+        //-----------------------------------
+    }
+
+    @Test
+    void reject() {
+        // Test when only called once
+        doNothing().when(mockDAO).reject(any());
+        usersServices.reject(fakeReject);
+        verify(mockDAO, times(1)).reject(any());
+        //-----------------------------------
+    }
+
+
 
     @Test
     void changePass() {
